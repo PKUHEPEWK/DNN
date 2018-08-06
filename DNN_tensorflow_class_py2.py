@@ -97,19 +97,55 @@ class DNN(object):
         y = tf.nn.softmax(tf.matmul(output,self.weights[-1]) + self.biases[-1])   ## using softmax  ## FIXME
         return y
 
+    def inference_regression(self, x, keep_prob): #FIXME #TODO
+        #define a certain model
+        ## input_layer - hidden_layer && hidden_layer - hidden_layer :: using for loop
+        for i, n_hidden in enumerate(self.n_hiddens):
+            if i == 0:
+                Input = x    # input may cause error, since python2...
+                input_dim = self.n_in
+            else:
+                Input = output
+                input_dim = self.n_hiddens[i-1]
+            self.weights.append(self.weight_variable([input_dim,n_hidden],name='W_{}'.format(i)))
+            self.biases.append(self.bias_variable([n_hidden],'b_{}'.format(i)))
+
+            u = tf.matmul(Input, self.weights[-1])      #FIXME Added for batch normalization
+            h = self.batch_normalization([n_hidden],u, nameb='b_{}'.format(i), nameg='g_{}'.format(i))  #FIXME Added for batch normalization
+            output = tf.nn.relu(h)                      #FIXME Added for batch normalization ## using relu  ## TODO 'activation function'
+            #output = tf.nn.dropout(output, keep_prob)   #FIXME Added for batch normalization ## using relu  ## TODO '(un)comment'
+
+            #h = tf.nn.relu(tf.matmul(Input, self.weights[-1]) + self.biases[-1])  ## using relu  ##FIXME wihtout batch_norm
+            #output = tf.nn.dropout(h, keep_prob)
+
+        ## hidden_layer - output_layer
+        self.weights.append(self.weight_variable([self.n_hiddens[-1],self.n_out]))
+        self.biases.append(self.bias_variable([self.n_out]))
+        y = tf.matmul(output,self.weights[-1]) + self.biases[-1]   ## using ~~  ## FIXME
+        return y
+        
+
+
     def loss(self, y, t):
         #cross_entropy = tf.reduce_mean(-tf.reduce_sum(t*tf.log(y), reduction_indices=[1]))  #old one
         cross_entropy = tf.reduce_mean(-tf.reduce_sum(t * tf.log(tf.clip_by_value(y,1e-10, 1.0)), reduction_indices=[1]))
         return cross_entropy
 
+    def loss_regression(self, y, t):
+        cross_entropy = tf.losses.mean_squared_error(t,y)
+#        cross_entropy = tf.reduce_mean(-tf.reduce_sum(t * tf.log(tf.clip_by_value(y,1e-10, 1.0)), reduction_indices=[1]))
+        return cross_entropy
+#        pass
+
+
     def training(self, loss):  ## FIXME TODO select optimizer
-        #optimizer = tf.train.GradientDescentOptimizer(0.01)
+        optimizer = tf.train.GradientDescentOptimizer(0.01)
         #optimizer = tf.train.MomentumOptimizer(0.01, 0.9)  # Momentum(gamma=0.9)
         #optimizer = tf.train.MomentumOptimizer(0.01, 0.9, use_nesterov=True) # Nesterov Momentum
         #optimizer = tf.train.AdagradOptimizer(0.01) # Adagrad, not recommended
         #optimizer = tf.train.AdadeltaOptimizer(learning_rate=1.0, rho=0.95)
         #optimizer = tf.train.RMSPropOptimizer(0.001) # Similar with AdadeltaOptimizer
-        optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999) ## recommended
+        #optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999) ## recommended
         train_step = optimizer.minimize(loss)
         return train_step
 
@@ -188,22 +224,22 @@ class DNN(object):
             self._history['accuracy'].append(accuracy_)
 
             if verbose:
-                print ('train_loss =', loss_,'\t', 'train_accuracy =',accuracy_)
+                print 'train_loss =', loss_,'\t', 'train_accuracy =',accuracy_
 
             if((one_third==0) & (epochs//(epoch+1) == 3)): 
                 one_third = 1
                 model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
-                print('Model has been saved to:', model_path)
+                print 'Model has been saved to:', model_path
             if((two_third==0) & (float(epoch+1)/float(epochs)>0.67)):
                 two_third = 1
                 model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
-                print('Model has been saved to:', model_path)
+                print 'Model has been saved to:', model_path
 
             if early_stopping.validate(val_loss):
                 break
 
         model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
-        print('Model has been saved to:', model_path)
+        print 'Model has been saved to:', model_path
         return self._history
 
 
@@ -233,9 +269,9 @@ class DNN(object):
         self._t = t
         self._keep_prob = keep_prob
 
-        y = self.inference(x,keep_prob)
+        y = self.inference_regression(x,keep_prob)
         self._y = y
-        loss = self.loss(y,t)
+        loss = self.loss_regression(y,t)
         train_step = self.training(loss)
         accuracy = self.regression_accuracy(y,t)
 
@@ -280,23 +316,23 @@ class DNN(object):
             self._history['accuracy'].append(accuracy_)
 
             if verbose:
-                print ('train_loss =', loss_,'\t', 'train_error =',accuracy_)
+                print 'train_loss =', loss_,'\t', 'train_error =',accuracy_
                 #print ('train_loss =', loss_,'\t')
 
             if((one_third==0) & (epochs//(epoch+1) == 3)):
                 one_third = 1
                 model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
-                print('Model has been saved to:', model_path)
+                print 'Model has been saved to:', model_path
             if((two_third==0) & (float(epoch+1)/float(epochs)>0.67)):
                 two_third = 1
                 model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
-                print('Model has been saved to:', model_path)
+                print 'Model has been saved to:', model_path
 
             if early_stopping.validate(val_loss):
                 break
 
         model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
-        print('Model has been saved to:', model_path)
+        print 'Model has been saved to:', model_path
         return self._history
 
 
