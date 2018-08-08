@@ -139,13 +139,13 @@ class DNN(object):
 
 
     def training(self, loss):  ## FIXME TODO select optimizer
-        optimizer = tf.train.GradientDescentOptimizer(0.01)
+        #optimizer = tf.train.GradientDescentOptimizer(0.01)
         #optimizer = tf.train.MomentumOptimizer(0.01, 0.9)  # Momentum(gamma=0.9)
         #optimizer = tf.train.MomentumOptimizer(0.01, 0.9, use_nesterov=True) # Nesterov Momentum
         #optimizer = tf.train.AdagradOptimizer(0.01) # Adagrad, not recommended
         #optimizer = tf.train.AdadeltaOptimizer(learning_rate=1.0, rho=0.95)
         #optimizer = tf.train.RMSPropOptimizer(0.001) # Similar with AdadeltaOptimizer
-        #optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999) ## recommended
+        optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999) ## recommended
         train_step = optimizer.minimize(loss)
         return train_step
 
@@ -171,7 +171,7 @@ class DNN(object):
         #    X_train = self.Data_normalization(X_train)
         #    X_validation = self.Data_normalization(X_validation)
  
-        MODEL_DIR = os.path.join(os.path.dirname(__file__),'tens_model')
+        MODEL_DIR = os.path.join(os.path.dirname(__file__),'tens_model_classi')
         if os.path.exists(MODEL_DIR) is False:
             os.mkdir(MODEL_DIR)
 
@@ -257,7 +257,7 @@ class DNN(object):
         #    X_train = self.Data_normalization(X_train)
         #    X_validation = self.Data_normalization(X_validation)
 
-        MODEL_DIR = os.path.join(os.path.dirname(__file__),'tens_model')
+        MODEL_DIR = os.path.join(os.path.dirname(__file__),'tens_model_reg')
         if os.path.exists(MODEL_DIR) is False:
             os.mkdir(MODEL_DIR)
 

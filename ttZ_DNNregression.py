@@ -8,7 +8,7 @@ from root_numpy import testdata
 
 model = DNN(n_in=29, n_hiddens=[150,150], n_out=1)
 MEM = True #FIXME 'False' for KIN
-epochs = 100
+epochs = 1000
 earlyStop = 70
 batch_size = 200
 model_name = "ttZ_tensor"
