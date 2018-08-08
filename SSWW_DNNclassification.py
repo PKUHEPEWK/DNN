@@ -4,15 +4,16 @@ from ROOT import TFile, TTree, TCut, TH1F
 from root_numpy import fill_hist
 from root_numpy import root2array, tree2array, array2root
 from root_numpy import testdata
+from sklearn.model_selection import train_test_split
 
-model = DNN(n_in=26, n_hiddens=[150,150], n_out=3)
-epochs = 1000
-earlyStop = 70
+model = DNN(n_in=26, n_hiddens=[150,150,150,150], n_out=3)
+epochs = 500
+earlyStop = 100
 batch_size = 200
-model_name = "ttZ_tensor"
+model_name = "SSWW_tensor"
 N_train = 72000
 
-data = TFile.Open('SS_pilot.root')
+data = TFile.Open('SSWW_input/SS_pilot.root')
 tree = data.Get('tree')
 
 ####################################### Input DATA Sets !!!!! 
@@ -122,11 +123,17 @@ TARGET = np.stack((LL_Helicity, TL_Helicity, TT_Helicity))
 ARRAY = ARRAY.T
 TARGET = TARGET.T
 
-X_train = ARRAY[0:N_train]
-Y_train = TARGET[0:N_train]
-X_validation = ARRAY[(N_train):]
-Y_validation = TARGET[(N_train):]
+#X_train = ARRAY[0:N_train]
+#Y_train = TARGET[0:N_train]
+#X_validation = ARRAY[(N_train):]
+#Y_validation = TARGET[(N_train):]
+#N_validation = ARRAY.shape[0]-(N_train)
+X_train = ARRAY[:]
+Y_train = TARGET[:]
 N_validation = ARRAY.shape[0]-(N_train)
+
+X_train, X_test, Y_train, Y_test = train_test_split(X_train, Y_train, train_size=N_train) 
+X_train, X_validation, Y_train, Y_validation = train_test_split(X_train, Y_train, test_size=N_validation)
 print(X_train.shape);print(X_validation.shape);print(Y_train.shape);print(Y_validation.shape)
 
 model.fit_classify(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name)
