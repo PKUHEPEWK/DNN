@@ -4,7 +4,7 @@ from ROOT import TFile, TTree, TCut, TH1F
 from root_numpy import fill_hist
 from root_numpy import root2array, tree2array, array2root
 from root_numpy import testdata
-
+from sklearn.model_selection import train_test_split
 
 model = DNN(n_in=29, n_hiddens=[150,150], n_out=1)
 MEM = True #FIXME 'False' for KIN
@@ -13,12 +13,12 @@ earlyStop = 70
 batch_size = 200
 model_name = "ttZ_tensor"
 N_train = 713050
-#N_train = 100000
+#N_train = 70000
 #N_validation = # remaining part would be taken as validation events
 
 
-data = TFile.Open('input_TTZ_Delphes_big_new.root')
-#data = TFile.Open('input_TTZ_DelphesEvalGen_5275k.root')
+data = TFile.Open('ttZ_input/New_DNN_ttZ.root')
+#data = TFile.Open('ttZ_input/out_ttz_250k.root')
 tree = data.Get('Tree')
 
 ####################################### Input DATA Sets !!!!! 
@@ -185,15 +185,18 @@ TARGET = TARGET.T
 
 X_train = ARRAY[0:N_train]
 Y_train = TARGET[0:N_train]
-X_validation = ARRAY[(N_train):]
-Y_validation = TARGET[(N_train):]
 N_validation = ARRAY.shape[0]-(N_train)
-print(X_train.shape);print(X_validation.shape);print(Y_train.shape);print(Y_validation.shape)
+#X_validation = ARRAY[(N_train):]
+#Y_validation = TARGET[(N_train):]
+#N_validation = ARRAY.shape[0]-(N_train)
+#print(X_train.shape);print(X_validation.shape);print(Y_train.shape);print(Y_validation.shape)
 #print(N_train); print(N_validation)
 
 #print(X_train[0], X_train[1]) #remove me
 #print(Y_train[0], Y_train[1]) #remove me
-
+#X_train, X_test, Y_train, Y_test = train_test_split(X_train, Y_train, train_size=N_train)
+X_train, X_validation, Y_train, Y_validation = train_test_split(X_train, Y_train, test_size=N_validation)
+print(X_train.shape);print(X_validation.shape);print(Y_train.shape);print(Y_validation.shape)
 
 model.fit_regression(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name)
 model.Plot_error_loss(plot_name='ttZ_regression.pdf')
