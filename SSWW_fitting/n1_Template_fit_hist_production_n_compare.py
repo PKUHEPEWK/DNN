@@ -161,6 +161,7 @@ class HistProduction:
 class HistoCompare:
     def __init__(self, fileList):
         self.filelist = fileList
+        self.namelist = [read_file_name_root(i)[0] for i in fileList]
         #print(self.filelist)
 
     def Read_Data_n_MC(self):
@@ -195,6 +196,7 @@ class HistoCompare:
 
         for i in range(len(Hist_list[0])):  # histo nums on each file
             cv = TCanvas("cv","cv",1200,900);
+            legend = TLegend(0.7,0.7,0.9,0.9)
             name = str(Hist_list[0][i].GetName())+"_Compare.pdf"
             for j in range(len(Hist_list)): # files nums
                 Scale_factor = 1.0/float(Hist_list[j][i].GetEntries()); #print(Scale_factor)
@@ -203,7 +205,8 @@ class HistoCompare:
                     Hist_list[j][i].SetStats(0);
                     Hist_list[j][i].SetLineColor(j+1)
                     Hist_list[j][i].Draw("h")
-                else: Hist_list[j][i].SetLineColor(j+1)  ;Hist_list[j][i].Draw("hsame")
+                    legend.AddEntry(Hist_list[j][i],self.namelist[j]) #FIXME
+                else: Hist_list[j][i].SetLineColor(j+1)  ;Hist_list[j][i].Draw("hsame"); legend.AddEntry(Hist_list[j][i],self.namelist[j]);
             cv.SaveAs(name)
             del cv
 
@@ -211,7 +214,6 @@ class HistoCompare:
 
 
 def main():
-
     Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_delphes_VBSsignal.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoDATA_DECAY.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_TTTL.root")
 #    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoDATA_DECAY.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_LL.root")
     histoName = ["Mjj","lep1pt","lep2pt","jet1pt","jet2pt","dphijj","MET","dr_ll_jj","zeppen_lep1","zeppen_lep2"] #"lep1pt"  #FIXME TODO
