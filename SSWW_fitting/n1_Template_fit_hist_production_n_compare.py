@@ -196,7 +196,7 @@ class HistoCompare:
 
         for i in range(len(Hist_list[0])):  # histo nums on each file
             cv = TCanvas("cv","cv",1200,900);
-            legend = TLegend(0.7,0.7,0.9,0.9)
+            legend = TLegend(0.8,0.8,1.1,1.0)
             name = str(Hist_list[0][i].GetName())+"_Compare.pdf"
             for j in range(len(Hist_list)): # files nums
                 Scale_factor = 1.0/float(Hist_list[j][i].GetEntries()); #print(Scale_factor)
@@ -204,12 +204,34 @@ class HistoCompare:
                 if j==0:
                     Hist_list[j][i].SetStats(0);
                     Hist_list[j][i].SetLineColor(j+1)
+                    Hist_list[j][i].GetXaxis().SetTitle(str(Hist_list[0][i].GetName()))
+                    Hist_list[j][i].GetYaxis().SetTitle("Proportion")
                     Hist_list[j][i].Draw("h")
                     legend.AddEntry(Hist_list[j][i],self.namelist[j]) #FIXME
                 else: Hist_list[j][i].SetLineColor(j+1)  ;Hist_list[j][i].Draw("hsame"); legend.AddEntry(Hist_list[j][i],self.namelist[j]);
+            legend.Draw()
             cv.SaveAs(name)
             del cv
 
+        for i in range(len(Hist_list[0])):  # histo nums on each file
+            cv = TCanvas("cv","cv",1200,900);
+            cv.SetLogy()
+            legend = TLegend(0.8,0.8,1.1,1.0)
+            name = str(Hist_list[0][i].GetName())+"_Compare_log.pdf"
+            for j in range(len(Hist_list)): # files nums
+                #Scale_factor = 1.0/float(Hist_list[j][i].GetEntries()); #print(Scale_factor)
+                #Hist_list[j][i].Scale(Scale_factor)
+                if j==0:
+                    Hist_list[j][i].SetStats(0);
+                    Hist_list[j][i].SetLineColor(j+1)
+                    Hist_list[j][i].GetXaxis().SetTitle(str(Hist_list[0][i].GetName()))
+                    Hist_list[j][i].GetYaxis().SetTitle("Proportion")
+                    Hist_list[j][i].Draw("h")
+                    legend.AddEntry(Hist_list[j][i],self.namelist[j]) #FIXME
+                else: Hist_list[j][i].SetLineColor(j+1)  ;Hist_list[j][i].Draw("hsame"); legend.AddEntry(Hist_list[j][i],self.namelist[j]);
+            legend.Draw()
+            cv.SaveAs(name)
+            del cv
 
 
 
