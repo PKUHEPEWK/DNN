@@ -16,7 +16,7 @@ batch_size = 200        #TODO FIXME
 Date=20180913          #TODO FIXME
 Layer_NUM= 1              #TODO FIXME
 Node_on_Each_layer=20   #TODO FIXME
-N_train = 240000         #TODO FIXME
+N_train = 340000         #TODO FIXME
 #N_train = 2000000
 Model_name = str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
 Make_dir = "mkdir -p "+ "tens_model_class/"+Model_name
@@ -162,9 +162,9 @@ for i in range(len(X_test)):
     TEST = np.append(X_test[i],Y_test[i])
     TEST = tuple(TEST)
     Test_List.append(TEST)
-    if(Y_train[i][0] == 1.0):
+    if(Y_test[i][0] == 1.0):
         Test_List_LL.append(TEST)
-    elif(Y_train[i][0] == 0.0):
+    elif(Y_test[i][0] == 0.0):
         Test_List_TTTL.append(TEST)
 #print(Test_List)
 TEST_nplist = np.array(Test_List,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep1phi',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),('lep2phi',np.float32),
