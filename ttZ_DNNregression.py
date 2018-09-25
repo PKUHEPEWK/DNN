@@ -1,8 +1,10 @@
+import os, sys
 import numpy as np
+import tensorflow as tf
 from DNN_tensorflow_class_py2 import EarlyStopping, DNN
 from ROOT import TFile, TTree, TCut, TH1F
 from root_numpy import fill_hist
-from root_numpy import root2array, tree2array, array2root
+from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
 
@@ -11,13 +13,17 @@ MEM = True #FIXME 'False' for KIN
 epochs = 1000
 earlyStop = 70
 batch_size = 200
-model_name = "ttZ_tensor"
-N_train = 713050
-#N_train = 70000
-#N_validation = # remaining part would be taken as validation events
+Date=20180913          #TODO FIXME
+Layer_NUM= 1              #TODO FIXME
+Node_on_Each_layer=20   #TODO FIXME
+#model_name = "ttZ_tensor"
+N_train = 1800000
+Model_name = str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
+Make_dir = "mkdir -p "+ "tens_model_reg/"+Model_name
+os.system(Make_dir)
+model_name = Model_name +"/"+ "ttZ_Reg"
 
-
-data = TFile.Open('ttZ_input/New_DNN_ttZ.root')
+data = TFile.Open('ttZ_input/DNN_ttZ.root')
 #data = TFile.Open('ttZ_input/out_ttz_250k.root')
 tree = data.Get('Tree')
 
@@ -183,8 +189,10 @@ ARRAY = ARRAY.T
 TARGET = TARGET.T
 #print(ARRAY.shape); print(TARGET.shape)
 
-X_train = ARRAY[0:N_train]
-Y_train = TARGET[0:N_train]
+#X_train = ARRAY[0:N_train]
+#Y_train = TARGET[0:N_train]
+X_train = ARRAY[:]
+Y_train = TARGET[:]
 N_validation = ARRAY.shape[0]-(N_train)
 #X_validation = ARRAY[(N_train):]
 #Y_validation = TARGET[(N_train):]
@@ -192,12 +200,52 @@ N_validation = ARRAY.shape[0]-(N_train)
 #print(X_train.shape);print(X_validation.shape);print(Y_train.shape);print(Y_validation.shape)
 #print(N_train); print(N_validation)
 
-#print(X_train[0], X_train[1]) #remove me
-#print(Y_train[0], Y_train[1]) #remove me
 #X_train, X_test, Y_train, Y_test = train_test_split(X_train, Y_train, train_size=N_train)
+#X_train, X_validation, Y_train, Y_validation = train_test_split(X_train, Y_train, test_size=N_validation)
+#print(X_train.shape);print(X_validation.shape);print(Y_train.shape);print(Y_validation.shape)
+
+X_train, X_test, Y_train, Y_test = train_test_split(X_train, Y_train, train_size=N_train)
 X_train, X_validation, Y_train, Y_validation = train_test_split(X_train, Y_train, test_size=N_validation)
-print(X_train.shape);print(X_validation.shape);print(Y_train.shape);print(Y_validation.shape)
+print(X_train.shape,"x_train");print(X_validation.shape,"x_validation");print(Y_train.shape);print(Y_validation.shape)
+
+make_ROOT_DIR = "mkdir -p tens_model_reg/"+Model_name+"/TEST_TRAIN_ROOT/"
+os.system(make_ROOT_DIR)
+## <SAVE TEST_ROOT>
+Test_List = []
+for i in range(len(X_test)):
+#    if i>1: break
+    TEST = np.append(X_test[i],Y_test[i])
+    TEST = tuple(TEST)
+    Test_List.append(TEST)
+#print(Test_List)
+TEST_nplist = np.array(Test_List, dtype=[('reco_bj1_Energy',np.float32), ('reco_bj1_Theta',np.float32), ('reco_bj1_Phi',np.float32), ('reco_bj2_Energy',np.float32), ('reco_bj2_Theta',np.float32), ('reco_bj2_Phi',np.float32), ('reco_MW1_Energy',np.float32), ('reco_MW1_Theta',np.float32), ('reco_MW1_Phi',np.float32), ('reco_MW2_Energy',np.float32), ('reco_MW2_Theta',np.float32), ('reco_MW2_Phi',np.float32), ('reco_l1_Energy',np.float32), ('reco_l1_Theta',np.float32), ('reco_l1_Phi',np.float32), ('reco_l2_Energy',np.float32), ('reco_l2_Theta',np.float32), ('reco_l2_Phi',np.float32), ('reco_l3_Energy',np.float32), ('reco_l3_Theta',np.float32), ('reco_l3_Phi',np.float32), ('reco_mET_Pt',np.float32), ('reco_mET_Phi',np.float32), ('mHT',np.float32), ('Gen_BjetTopHad_E',np.float32), ('Gen_WTopHad_mW',np.float32), ('Gen_BjetTopLep_E',np.float32), ('Gen_NeutTopLep_Phi',np.float32), ('Gen_WTopLep_mW',np.float32), ('mc_mem_ttz_weight_evalgenmax_log',np.float32)] )
+ROOT_filename = "tens_model_reg/"+Model_name+"/TEST_TRAIN_ROOT/"+"TEST_ROOT.root"
+Test_ROOT = TFile(ROOT_filename,"RECREATE")
+tree_test = array2tree(TEST_nplist)
+tree_test.Write()
+Test_ROOT.Close()
+del Test_List
+del TEST_nplist
+## </SAVE TEST_ROOT>
+
+## <SAVE TRAIN ROOT>
+Train_List = []
+for i in range(len(X_train)):
+    TRAIN = np.append(X_train[i],Y_train[i])
+    TRAIN = tuple(TRAIN)
+    Train_List.append(TRAIN)
+TRAIN_nplist = np.array(Train_List,dtype=[('reco_bj1_Energy',np.float32), ('reco_bj1_Theta',np.float32), ('reco_bj1_Phi',np.float32), ('reco_bj2_Energy',np.float32), ('reco_bj2_Theta',np.float32), ('reco_bj2_Phi',np.float32), ('reco_MW1_Energy',np.float32), ('reco_MW1_Theta',np.float32), ('reco_MW1_Phi',np.float32), ('reco_MW2_Energy',np.float32), ('reco_MW2_Theta',np.float32), ('reco_MW2_Phi',np.float32), ('reco_l1_Energy',np.float32), ('reco_l1_Theta',np.float32), ('reco_l1_Phi',np.float32), ('reco_l2_Energy',np.float32), ('reco_l2_Theta',np.float32), ('reco_l2_Phi',np.float32), ('reco_l3_Energy',np.float32), ('reco_l3_Theta',np.float32), ('reco_l3_Phi',np.float32), ('reco_mET_Pt',np.float32), ('reco_mET_Phi',np.float32), ('mHT',np.float32), ('Gen_BjetTopHad_E',np.float32), ('Gen_WTopHad_mW',np.float32), ('Gen_BjetTopLep_E',np.float32), ('Gen_NeutTopLep_Phi',np.float32), ('Gen_WTopLep_mW',np.float32), ('mc_mem_ttz_weight_evalgenmax_log',np.float32)])
+ROOT_filename = "tens_model_reg/"+Model_name+"/TEST_TRAIN_ROOT/"+"TRAIN_ROOT.root"
+Train_ROOT = TFile(ROOT_filename,"RECREATE")
+tree_train = array2tree(TRAIN_nplist)
+tree_train.Write()
+Train_ROOT.Close()
+del Train_List
+del TRAIN_nplist
+## </SAVE TRAIN ROOT>
+
 
 model.fit_regression(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name)
-model.Plot_error_loss(plot_name='ttZ_regression.pdf')
+plot_name = "tens_model_reg/"+Model_name+"/"+"ttZ_DNN_reg.pdf"
+model.Plot_acc_loss(plot_name = plot_name)
 

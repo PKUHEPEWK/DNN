@@ -44,7 +44,7 @@ class HistoCompare:
 
         for i in range(len(Hist_list[0])):  # histo nums on each file
             cv = TCanvas("cv","cv",1200,900);
-            legend = TLegend(0.8,0.8,1.1,1.0) 
+            legend = TLegend(0.8,0.8,1.0,1.0) 
             name = str(Hist_list[0][i].GetName())+"_Compare.pdf"
             for j in range(len(Hist_list)): # files nums
                 Scale_factor = 1.0/float(Hist_list[j][i].GetEntries()); #print(Scale_factor)
@@ -64,7 +64,7 @@ class HistoCompare:
         for i in range(len(Hist_list[0])):  # histo nums on each file
             cv = TCanvas("cv","cv",1200,900);
             cv.SetLogy()
-            legend = TLegend(0.8,0.8,1.1,1.0)
+            legend = TLegend(0.8,0.8,1.0,1.0)
             name = str(Hist_list[0][i].GetName())+"_Compare_log.pdf"
             for j in range(len(Hist_list)): # files nums
                 #Scale_factor = 1.0/float(Hist_list[j][i].GetEntries()); #print(Scale_factor)
@@ -84,7 +84,7 @@ class HistoCompare:
 
 
 def main():
-    infileList = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/LL_120M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/TTTL_120M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/PseudoDATA_for_n2/PseudoDATA_DECAY.root")  ## DECAY Package involved DATA. TODO
+    infileList = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/LL_250M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/TTTL_250M.root")#,"/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/PseudoDATA_for_n2/PseudoDATA_DECAY1M.root")  ## DECAY Package involved DATA. TODO
 #    infileList = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/LL_120M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/TTTL_120M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/PseudoDATA_for_n2/PseudoDATA_noDECAY.root") ## No DECAY Package involved DATA. TODO
    
 #    infileList = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/LL_120M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/Template_for_n2/TTTL_120M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/PseudoDATA_for_n2/PseudoDATA_DECAY.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting/PseudoDATA_for_n2/PseudoDATA_noDECAY.root") ## Both DECAY & no_DECAY Packages involved. TODO

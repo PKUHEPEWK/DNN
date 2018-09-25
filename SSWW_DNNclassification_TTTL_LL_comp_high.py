@@ -8,17 +8,17 @@ from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
 
-model = DNN(n_in=26, n_hiddens=[20], n_out=2) #TODO FIXME
-#epochs = 1000
-epochs = 3
-earlyStop =  1#20       #TODO FIXME
-batch_size = 200        #TODO FIXME
-Date=20180913          #TODO FIXME
-Layer_NUM= 1              #TODO FIXME
-Node_on_Each_layer=20   #TODO FIXME
-N_train = 240000         #TODO FIXME
+model = DNN(n_in=13, n_hiddens=[200,200,200,200,200,200], n_out=2) #TODO FIXME
+epochs = 500
+#epochs = 3
+earlyStop =  200000#20       #TODO FIXME
+batch_size = 100        #TODO FIXME
+Date=20180924          #TODO FIXME
+Layer_NUM= 6             #TODO FIXME
+Node_on_Each_layer=200   #TODO FIXME
+N_train = 280000         #TODO FIXME
 #N_train = 2000000
-Model_name = str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
+Model_name = "High_"+str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
 Make_dir = "mkdir -p "+ "tens_model_class/"+Model_name
 os.system(Make_dir)
 model_name = Model_name +"/"+ "SSWW_tensor_TTTL-LL_comp"
@@ -131,7 +131,8 @@ for j1 in range(ENTRY):
     #TL_Helicity[j1] = TL_Helicity_[j1]
     #TT_Helicity[j1] = TT_Helicity_[j1]
 
-ARRAY = np.stack((lep1pt, lep1eta, lep1phi, lep2pt, lep2eta, lep2phi, jet1pt, jet1eta, jet1phi, jet1M, jet2pt, jet2eta, jet2phi, jet2M, MET, lep1PID, lep2PID, Mjj, dr_ll_jj, dphijj, zeppen_lep1, zeppen_lep2, METphi, detajj, Mll, RpT))
+#ARRAY = np.stack((lep1pt, lep1eta, lep1phi, lep2pt, lep2eta, lep2phi, jet1pt, jet1eta, jet1phi, jet1M, jet2pt, jet2eta, jet2phi, jet2M, MET, lep1PID, lep2PID, Mjj, dr_ll_jj, dphijj, zeppen_lep1, zeppen_lep2, METphi, detajj, Mll, RpT))
+ARRAY = np.stack((lep1pt, lep1eta, lep2pt, lep2eta, jet1pt, jet1eta, jet2pt, jet2eta, MET, dr_ll_jj, dphijj, detajj, Mll))
 TARGET = np.stack((LL_Helicity, TTTL_Helicity))
 #TARGET = np.stack((LL_Helicity, TL_Helicity, TT_Helicity))
 
@@ -147,8 +148,11 @@ X_train = ARRAY[:]
 Y_train = TARGET[:]
 N_validation = ARRAY.shape[0]-(N_train)
 
+print(X_train[0])
 X_train, X_test, Y_train, Y_test = train_test_split(X_train, Y_train, train_size=N_train) 
+print(X_train[0])
 X_train, X_validation, Y_train, Y_validation = train_test_split(X_train, Y_train, test_size=N_validation)
+print(X_train[0])
 print(X_train.shape,"x_train");print(X_validation.shape,"x_validation");print(Y_train.shape);print(Y_validation.shape)
 
 
@@ -162,25 +166,25 @@ for i in range(len(X_test)):
     TEST = np.append(X_test[i],Y_test[i])
     TEST = tuple(TEST)
     Test_List.append(TEST)
-    if(Y_train[i][0] == 1.0):
+    if(Y_test[i][0] == 1.0):
         Test_List_LL.append(TEST)
-    elif(Y_train[i][0] == 0.0):
+    elif(Y_test[i][0] == 0.0):
         Test_List_TTTL.append(TEST)
 #print(Test_List)
-TEST_nplist = np.array(Test_List,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep1phi',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),('lep2phi',np.float32),
-('jet1pt',np.float32),('jet1eta',np.float32),('jet1phi',np.float32),('jet1M',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),('jet2phi',np.float32),('jet2M',np.float32),
-('MET',np.float32),('lep1PID',np.float32),('lep2PID',np.float32),('Mjj',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),('zeppen_lep1',np.float32),('zeppen_lep2',np.float32),
-('METphi',np.float32),('detajj',np.float32),('Mll',np.float32),('RpT',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
+TEST_nplist = np.array(Test_List,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 #print(TEST_nplist)
-TEST_nplist_LL = np.array(Test_List_LL,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep1phi',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),('lep2phi',np.float32),
-('jet1pt',np.float32),('jet1eta',np.float32),('jet1phi',np.float32),('jet1M',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),('jet2phi',np.float32),('jet2M',np.float32),
-('MET',np.float32),('lep1PID',np.float32),('lep2PID',np.float32),('Mjj',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),('zeppen_lep1',np.float32),('zeppen_lep2',np.float32),
-('METphi',np.float32),('detajj',np.float32),('Mll',np.float32),('RpT',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)])
+TEST_nplist_LL = np.array(Test_List_LL, dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 
-TEST_nplist_TTTL = np.array(Test_List_TTTL,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep1phi',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),('lep2phi',np.float32),
-('jet1pt',np.float32),('jet1eta',np.float32),('jet1phi',np.float32),('jet1M',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),('jet2phi',np.float32),('jet2M',np.float32),
-('MET',np.float32),('lep1PID',np.float32),('lep2PID',np.float32),('Mjj',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),('zeppen_lep1',np.float32),('zeppen_lep2',np.float32),
-('METphi',np.float32),('detajj',np.float32),('Mll',np.float32),('RpT',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)])
+TEST_nplist_TTTL = np.array(Test_List_TTTL, dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 
 ROOT_filename = "tens_model_class/"+Model_name+"/TEST_TRAIN_ROOT/"+"TEST_ROOT.root"
 ROOT_filename_LL = "tens_model_class/"+Model_name+"/TEST_TRAIN_ROOT/"+"TEST_ROOT_LL.root"
@@ -214,20 +218,20 @@ for i in range(len(X_train)):
         Train_List_LL.append(TRAIN)
     elif(Y_train[i][0] == 0.0):
         Train_List_TTTL.append(TRAIN)
-TRAIN_nplist = np.array(Train_List,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep1phi',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),('lep2phi',np.float32),
-('jet1pt',np.float32),('jet1eta',np.float32),('jet1phi',np.float32),('jet1M',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),('jet2phi',np.float32),('jet2M',np.float32),
-('MET',np.float32),('lep1PID',np.float32),('lep2PID',np.float32),('Mjj',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),('zeppen_lep1',np.float32),('zeppen_lep2',np.float32),
-('METphi',np.float32),('detajj',np.float32),('Mll',np.float32),('RpT',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)])
+TRAIN_nplist = np.array(Train_List,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 
-TRAIN_nplist_LL = np.array(Train_List_LL,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep1phi',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),('lep2phi',np.float32),
-('jet1pt',np.float32),('jet1eta',np.float32),('jet1phi',np.float32),('jet1M',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),('jet2phi',np.float32),('jet2M',np.float32),
-('MET',np.float32),('lep1PID',np.float32),('lep2PID',np.float32),('Mjj',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),('zeppen_lep1',np.float32),('zeppen_lep2',np.float32),
-('METphi',np.float32),('detajj',np.float32),('Mll',np.float32),('RpT',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)])
+TRAIN_nplist_LL = np.array(Train_List_LL,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 
-TRAIN_nplist_TTTL = np.array(Train_List_TTTL,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep1phi',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),('lep2phi',np.float32),
-('jet1pt',np.float32),('jet1eta',np.float32),('jet1phi',np.float32),('jet1M',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),('jet2phi',np.float32),('jet2M',np.float32),
-('MET',np.float32),('lep1PID',np.float32),('lep2PID',np.float32),('Mjj',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),('zeppen_lep1',np.float32),('zeppen_lep2',np.float32),
-('METphi',np.float32),('detajj',np.float32),('Mll',np.float32),('RpT',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)])
+TRAIN_nplist_TTTL = np.array(Train_List_TTTL,dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 
 ROOT_filename = "tens_model_class/"+Model_name+"/TEST_TRAIN_ROOT/"+"TRAIN_ROOT.root"
 ROOT_filename_LL = "tens_model_class/"+Model_name+"/TEST_TRAIN_ROOT/"+"TRAIN_ROOT_LL.root"

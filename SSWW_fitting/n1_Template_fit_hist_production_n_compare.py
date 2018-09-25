@@ -234,14 +234,26 @@ class HistoCompare:
             del cv
 
 
-
+#/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA
 def main():
-    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_delphes_VBSsignal.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoDATA_DECAY.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_TTTL.root")
+    '''
+    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoData_DECAY_1M.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_TTTL.root")
 #    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoDATA_DECAY.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_LL.root")
-    histoName = ["Mjj","lep1pt","lep2pt","jet1pt","jet2pt","dphijj","MET","dr_ll_jj","zeppen_lep1","zeppen_lep2"] #"lep1pt"  #FIXME TODO
+    histoName = ["Mjj","lep1pt","lep2pt","jet1pt","jet2pt","dphijj","MET","dr_ll_jj","zeppen_lep1","zeppen_lep2","RpT"] #"lep1pt"  #FIXME TODO
+    '''
+
+    
+    Infile_list =("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_TTTL.root")
+    histoName = ["MET","METphi","Mjj","Mll","RpT","detajj","dphijj","dr_ll_jj","jet1eta","jet1phi","jet1pt","jet2eta","jet2phi","jet2pt","lep1eta","lep1phi","lep1pt","lep2eta","lep2phi","lep2pt","zeppen_lep1","zeppen_lep2"]
+    
+
+    '''
+    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TEST_ROOT_LL_tree.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TEST_ROOT_TTTL_tree.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TRAIN_ROOT_LL_tree.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL_tree.root")
+    histoName = ["LL","TTTL"]
+    '''
 
     HistP = HistProduction(Infile_list)
-    Hist_files = HistP.MakeHistoROOT(binNum=20,histoName=histoName)  # FIXME Turn this on if histo production required.
+    Hist_files = HistP.MakeHistoROOT(binNum=100,histoName=histoName)  # FIXME Turn this on if histo production required.
     print(Hist_files)
 
     HistoCom = HistoCompare(Hist_files)

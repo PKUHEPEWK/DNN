@@ -364,7 +364,7 @@ class DNN(object):
 
 def main():
     model = DNN(n_in=784, n_hiddens=[200,200,200], n_out=10)
-    epochs = 1000  #FIXME
+    epochs = 100  #FIXME
     earlyStop = 50 #epochs//5
     batch_size = 200
     model_name = "mnist_tensor"
@@ -386,18 +386,18 @@ def main():
     print('accuracy:', accuracy)
     '''
 
-    '''
+    
     ## 2. classification model
     model.fit_classify(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name)
     accuracy = model.evaluate(X_test, Y_test)
     print('accuracy:', accuracy)
     model.Plot_acc_loss(plot_name='mnist_tensorflow.pdf')
+    
     '''
-
     # 3. regression model
     model.fit_regression(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name)
     model.Plot_error_loss(plot_name='mnist_tensorflow.pdf')
-
+    '''
 
 
 if __name__=="__main__":

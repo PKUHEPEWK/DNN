@@ -13,7 +13,7 @@ batch_size = 200
 model_name = "SSWW_tensor_TTTL-LL"
 N_train = 1250000  #780000 
 
-data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_120M.root')
+data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_190M.root')
 tree = data.Get('tree')
 
 ####################################### Input DATA Sets !!!!! 

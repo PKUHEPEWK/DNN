@@ -1,3 +1,4 @@
+#Make TT+TL or LL only, once on each time
 from ROOT import TFile, TH1D, TH1F, TCanvas, TColor, TGaxis, TPad, gBenchmark, TTree
 import os, sys
 import numpy
@@ -87,7 +88,7 @@ class SplitROOT(object):
         ITER = dirlist.MakeIterator()
         key = ITER.Next()
 
-        outfileName = os.getcwd() + "/" + FileNameList[0] + "_cut.root"        
+        outfileName = os.getcwd() + "/" + FileNameList[0] + "_cut_LL.root"       #FIXME 
         print("CREATING... :",outfileName)        
         outfile = TFile(outfileName,"RECREATE")
 
@@ -97,7 +98,7 @@ class SplitROOT(object):
             if(break_flag==1): break
             break_flag += 1
             tree = key.ReadObj()
-            tree_f = TTree(tree.GetName()+"_f",tree.GetName()+"_f")
+            tree_f = TTree(tree.GetName()+"",tree.GetName()+"")
             ENTRY = tree.GetEntries();  #print(ENTRY)
             for i in range(len(DicNumpyArray_branch)):
                 if(list(DicNumpyArray_branch.keys())[i] in BranchListEachTree[tree.GetName()]):
@@ -154,7 +155,7 @@ class SplitROOT(object):
 
 
 def main():
-    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_120M.root" 
+    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_250M.root" 
     test_split = SplitROOT(infile) 
     branchList = test_split.get_branch_list_all()
     print(branchList)

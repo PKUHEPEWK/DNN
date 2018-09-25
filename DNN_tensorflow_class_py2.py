@@ -171,7 +171,7 @@ class DNN(object):
         #    X_train = self.Data_normalization(X_train)
         #    X_validation = self.Data_normalization(X_validation)
  
-        MODEL_DIR = os.path.join(os.path.dirname(__file__),'tens_model_classi')
+        MODEL_DIR = os.path.join(os.path.dirname(__file__),'tens_model_class')
         if os.path.exists(MODEL_DIR) is False:
             os.mkdir(MODEL_DIR)
 
@@ -355,7 +355,29 @@ class DNN(object):
         sess = tf.Session()
         self._sess = sess
         saver.restore(sess, ModelName)
-    
+
+    '''
+    def accuracy(self, y, t):
+        correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(t,1))
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+        return accuracy
+    ''' 
+
+    def Indicate_classified_LL_TTTL(self, X, Y):
+#        prediction = tf.argmax(self._y,1)
+        prediction = self._y 
+        eval_pred = prediction.eval(session=self._sess, feed_dict={self._x: X, self._t: Y, self._keep_prob: 1.0})
+        LL=0; TTTL=0
+        for i in range(len(eval_pred)):
+            if(eval_pred[i][0] > eval_pred[i][1]): 
+                LL += 1
+            else: 
+                TTTL += 1
+        print("LL :",LL)
+        print("TTTL :", TTTL)
+        return_tuple = (LL,TTTL,eval_pred)
+        return return_tuple
+
 
     def evaluate(self, X_test, Y_test):
         accuracy = self.accuracy(self._y, self._t)
