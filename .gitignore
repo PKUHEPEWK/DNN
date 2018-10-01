@@ -4,4 +4,7 @@
 *.pdf
 *.eps
 tens_model
-tens_model_classi
+tens_model_class
+tens_model_reg
+SSWW_input
+*.cpkt*
