@@ -8,23 +8,25 @@ from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
 
-model = DNN(n_in=13, n_hiddens=[200,200,200,200,200,200], n_out=2) #TODO FIXME
-epochs = 500
-#epochs = 3
-earlyStop =  200000#20       #TODO FIXME
+model = DNN(n_in=13, n_hiddens=[200,200,200], n_out=2) #TODO FIXME
+#epochs = 100
+epochs = 30
+earlyStop =  20#20       #TODO FIXME
 batch_size = 100        #TODO FIXME
-Date=20180924          #TODO FIXME
-Layer_NUM= 6             #TODO FIXME
+Date=20180925          #TODO FIXME
+Layer_NUM= 3             #TODO FIXME
 Node_on_Each_layer=200   #TODO FIXME
-N_train = 280000         #TODO FIXME
+#N_train = 680000         #TODO FIXME
 #N_train = 2000000
+N_train = 4000000
 Model_name = "High_"+str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
 Make_dir = "mkdir -p "+ "tens_model_class/"+Model_name
 os.system(Make_dir)
 model_name = Model_name +"/"+ "SSWW_tensor_TTTL-LL_comp"
 
-data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_250M_comparable.root')
+#data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_250M_comparable_3.root')
 #data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_230M.root')
+data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/TEST_Multiplied_LLs/Multiplied_LLs.root')
 tree = data.Get('tree')
 
 ####################################### Input DATA Sets !!!!! 

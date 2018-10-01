@@ -13,8 +13,10 @@ from c0_READ_PATH_FILE_ROOT import read_file_name_root
 def InputROOT_OutputTXT(infileROOT,ModelName):
     inputFile = read_file_name_root(infileROOT)
     ROOT_input = inputFile[2]
-    Text_output = inputFile[0] + ".txt"
-#    data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_230M_comparable.root')
+    ROOT_Estimated_LL = inputFile[3] + inputFile[0] + "_Esti_LL.root"
+    ROOT_Estimated_TTTL = inputFile[3] + inputFile[0] + "_Esti_TTTL.root"
+    print(ROOT_Estimated_LL, ROOT_Estimated_TTTL)   
+
     data = TFile.Open(ROOT_input)
     tree = data.Get('tree')
     ####################################### Input DATA Sets !!!!! 
@@ -141,58 +143,52 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     np.set_printoptions(threshold='nan')
     LL_TTTL_prob_tuple = model.Indicate_classified_LL_TTTL(X_part, Y_part)
 
-    OF = open(Text_output,"w+")
     print(len(LL_TTTL_prob_tuple[2]))
+
+    #List = []; 
+    List_LL = []; List_TTTL = []
     for i in range(len(LL_TTTL_prob_tuple[2])):
-        if i==0: OF.write("%s\n" %"LL TTTL")
         LL_n_TTTL = str(LL_TTTL_prob_tuple[2][i]).replace("[","")
         LL_n_TTTL = LL_n_TTTL.replace("]","")
-        OF.write("%s" %LL_n_TTTL)
-        #LL_p, TTTL_p = LL_n_TTTL.split(); LL_p = float(LL_p); TTTL_p = float(TTTL_p)
+       
+        XY_part = np.append(X_part[i],Y_part[i])
+        XY_part = tuple(XY_part) 
+        #List.append(XY_part)
+        LL_p, TTTL_p = LL_n_TTTL.split(); LL_p = float(LL_p); TTTL_p = float(TTTL_p)
         #print(LL_n_TTTL, LL_p, TTTL_p)
-        OF.write("\n")
-    OF.close()
+        if(LL_p>0.5):
+            List_LL.append(XY_part)
+        elif(TTTL_p>0.5):
+            List_TTTL.append(XY_part)
+        else:
+            print("ERROR on LL, TTTL proportion!")
+            break
     
+    nplist_LL = np.array(List_LL, dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+    ('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+    ('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+    ('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 
-    ##'''
-    '''
-    X_train = ARRAY[:]
-    Y_train = TARGET[:]
-    N_validation = ARRAY.shape[0]-(N_train)
-    X_train, X_test, Y_train, Y_test = train_test_split(X_train, Y_train, train_size=N_train)
-    X_train, X_validation, Y_train, Y_validation = train_test_split(X_train, Y_train, test_size=N_validation)
-    print(X_train.shape,"x_train");print(X_validation.shape,"x_validation");print(Y_train.shape);print(Y_validation.shape)
-    model = DNN(n_in=26, n_hiddens=[150,150,150], n_out=2)
-    model.fit_classify_model_read(ModelName=ModelName)
-    accuracy = model.evaluate(X_test, Y_test)
-    print('accuracy:', accuracy)
-    np.set_printoptions(threshold='nan')
-    LL_TTTL_prob_tuple = model.Indicate_classified_LL_TTTL(X_test,Y_test)
-    '''
+    nplist_TTTL = np.array(List_TTTL, dtype=[('lep1pt',np.float32),('lep1eta',np.float32),('lep2pt',np.float32),('lep2eta',np.float32),
+    ('jet1pt',np.float32),('jet1eta',np.float32),('jet2pt',np.float32),('jet2eta',np.float32),
+    ('MET',np.float32),('dr_ll_jj',np.float32),('dphijj',np.float32),
+    ('detajj',np.float32),('Mll',np.float32), ('LL_Helicity',np.float32), ('TTTL_Helicity',np.float32)] )
 
-    '''
-    OF_LL = open("softmax_test_LL.txt","a+")
-    OF_TTTL = open("softmax_test_TTTL.txt","a+")
-    for i in range(len(Y_test)):
-    #    if i>5: break
-    #    print(Y_test[i][0])
-    #    print(Y_test[i][1])
-    #    print("")
-        if(Y_test[i][0]==1.0):
-            OF_LL.write("%s" %LL_TTTL_prob_tuple[i])
-        elif(Y_test[i][1]==1.0):
-            OF_TTTL.write("%s" %LL_TTTL_prob_tuple[i])
-    OF_LL.close()
-    OF_TTTL.close()
-    '''
+    LL_ROOT = TFile(ROOT_Estimated_LL,"RECREATE")
+    tree_LL = array2tree(nplist_LL)
+    tree_LL.Write()
+    LL_ROOT.Close()
+
+    TTTL_ROOT = TFile(ROOT_Estimated_TTTL,"RECREATE")
+    tree_TTTL = array2tree(nplist_TTTL)
+    tree_TTTL.Write()
+    TTTL_ROOT.Close()
+
 
 def main():
-    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT_LL.root"
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT_TTTL.root"
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_LL.root"
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL.root"
+#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT.root"
+    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT.root"
 
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoData_DECAY_1M_MERGED.root"
 
     ModelName = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/SSWW_tensor_TTTL-LL_comp_EP126.ckpt" #FIXME
 

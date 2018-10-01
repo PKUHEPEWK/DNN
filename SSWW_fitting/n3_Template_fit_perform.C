@@ -8,12 +8,12 @@ void n3_Template_fit_perform()
     TFile *fileMC1 = new TFile("Template_for_n2/TTTL_120M.root","READ"); //TODO : add files if there are
     */
 
-    TFile *fileSignal = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/20180906_TrainENum310000/LayerNum_3+Node_150+BatchSize_200/TEST_TRAIN_ROOT/Ntuple_PseudoData_DECAY_1M_MERGED_tree_hist.root","READ");
-    TFile *fileMC0 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/20180906_TrainENum310000/LayerNum_3+Node_150+BatchSize_200/TEST_TRAIN_ROOT/TEST_ROOT_LL_tree_hist.root ","READ");
-    TFile *fileMC1 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/20180906_TrainENum310000/LayerNum_3+Node_150+BatchSize_200/TEST_TRAIN_ROOT/TEST_ROOT_TTTL_tree_hist.root ","READ");
+    TFile *fileSignal = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum240000/LayerNum_1+Node_20+BatchSize_100/TEST_TRAIN_ROOT/Ntuple_PseudoData_DECAY_1M_MERGED_tree_hist10.root","READ");
+    TFile *fileMC0 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum240000/LayerNum_1+Node_20+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_LL_tree_hist10.root","READ");
+    TFile *fileMC1 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum240000/LayerNum_1+Node_20+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL_tree_hist10.root","READ");
 
 
-    TString HistoName = "LL_prob"; // TODO
+    TString HistoName = "LL"; // TODO
     const int MCFracs = 2;   //////TODO : the MC fraction numbers
     //const int Rotations = 2;
     double br[MCFracs],brer[MCFracs];
@@ -60,7 +60,7 @@ void n3_Template_fit_perform()
     TFractionFitter* fit = new TFractionFitter(data, mc);
     fit->Constrain(0,0.0,1.0);
     fit->Constrain(1,0.0,1.0);  // TODO : constrains on MC fractions
-    //fit->SetRangeX(1,11);  // TODO : Perform fitting on given bin range
+    fit->SetRangeX(4,8);  // TODO : Perform fitting on given bin range
     //fit->SetRangeX(1,15);
 
     Int_t status = fit->Fit();

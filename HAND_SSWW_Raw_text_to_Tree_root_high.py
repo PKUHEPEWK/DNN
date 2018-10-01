@@ -72,6 +72,7 @@ def Raw_text_to_Tree_root(filename, outputpath = "."):
     for i in range(len(List_branch)):
         tree.Branch(LL[i],List_branch[i],LL[i]+"/D")
 
+    SkipFirstLine = 0
     for line in f:
         LL1 = []
         LL1 = line.split()
@@ -90,10 +91,11 @@ def main():
 #    Infile = "/Users/leejunho/Desktop/git/python3Env/group_study/fruit_team/ROOT/Project/tranfer_test/data/concrete.txt"
 #    Infile = "/Users/leejunho/Desktop/git/python3Env/group_study/project_pre/data_txt/BINANCE_DATA.txt"
 
-    Infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TRAIN_ROOT_LL.txt"
+    #Infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TRAIN_ROOT_LL.txt"
 #    Infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL.txt"
 #    Infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TEST_ROOT_LL.txt"
 #    Infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180913_TrainENum240000/LayerNum_1+Node_20+BatchSize_200/TEST_TRAIN_ROOT/TEST_ROOT_TTTL.txt"
+    Infile = "Ntuple_PseudoData_DECAY_1M_MERGED.txt"
 
     Raw_text_to_Tree_root(Infile,".")
 

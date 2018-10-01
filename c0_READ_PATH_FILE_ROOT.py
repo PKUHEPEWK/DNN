@@ -1,6 +1,6 @@
 import os
 
-def read_file_name_root(filename):             # returning [filename, filename.txt, absolute path filename.txt, absolute path]
+def read_file_name_root(filename):             # returning [filename, filename.root, absolute path filename.root, absolute path]
 
     if(filename[0] == '/'):                 # 'filename' of absoulte location 
         filename = filename
