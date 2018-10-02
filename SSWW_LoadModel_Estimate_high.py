@@ -1,6 +1,6 @@
 # This input ROOT file with DNN model Loaded together, outputs probability of softmax txt
 import numpy as np
-import os
+import os, sys
 from DNN_tensorflow_class_py2 import DNN
 from ROOT import TFile, TTree, TCut, TH1F
 from root_numpy import fill_hist
@@ -8,13 +8,16 @@ from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
 from c0_READ_PATH_FILE_ROOT import read_file_name_root
+sys.path.append("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_fitting")
+from n1_Template_fit_hist_production_n_compare import HistProduction, HistoCompare
 
 
 def InputROOT_OutputTXT(infileROOT,ModelName):
     inputFile = read_file_name_root(infileROOT)
     ROOT_input = inputFile[2]
-    ROOT_Estimated_LL = inputFile[3] + inputFile[0] + "_Esti_LL.root"
-    ROOT_Estimated_TTTL = inputFile[3] + inputFile[0] + "_Esti_TTTL.root"
+    ROOT_Estimated_LL = inputFile[3] + "Estimated_LL.root"
+    ROOT_Estimated_TTTL = inputFile[3] + "Estimated_TTTL.root"
+#    ROOT_Estimated_TTTL = inputFile[3] + inputFile[0] + "_Esti_TTTL.root"
     print(ROOT_Estimated_LL, ROOT_Estimated_TTTL)   
 
     data = TFile.Open(ROOT_input)
@@ -136,7 +139,7 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     #N_validation = ARRAY.shape[0]-(N_train)
     print(X_part.shape,"x_train"); print(Y_part.shape)
     #model = DNN(n_in=26, n_hiddens=[150], n_out=2)  ##FIXME TODO
-    model = DNN(n_in=13, n_hiddens=[200,200,200,200,200,200], n_out=2)  ##FIXME TODO
+    model = DNN(n_in=13, n_hiddens=[200,200], n_out=2)  ##FIXME TODO
     model.fit_classify_model_read(ModelName=ModelName)
     accuracy = model.evaluate(X_part, Y_part)
     print('accuracy:', accuracy)
@@ -184,16 +187,39 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     tree_TTTL.Write()
     TTTL_ROOT.Close()
 
+    return [ROOT_Estimated_LL,ROOT_Estimated_TTTL]
 
 def main():
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT.root"
-    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT.root"
+#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT.root" #FIXME
+    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180925_TrainENum4000000/LayerNum_2+Node_200+BatchSize_100/TEST_TRAIN_ROOT/PseudoDATA_3ab_MERGED.root" #FIXME
+    PseudoDATA = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root" #FIXME PseudoDATA
 
+    inputFile = read_file_name_root(infileROOT)
+    ModelName = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180925_TrainENum4000000/LayerNum_2+Node_200+BatchSize_100/SSWW_tensor_TTTL-LL_comp_EP5.ckpt" #FIXME
+    ROOT_LL_TTTL = InputROOT_OutputTXT(infileROOT=infileROOT, ModelName=ModelName)
+    #print(ROOT_LL_TTTL)
+    Appending = [inputFile[3]+"TEST_ROOT_LL.root",inputFile[3]+"TEST_ROOT_TTTL.root"]
+    ROOT_LL_TTTL.append(Appending[0]); ROOT_LL_TTTL.append(Appending[1])
+    ROOT_LL_TTTL.append(PseudoDATA)
 
-    ModelName = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/SSWW_tensor_TTTL-LL_comp_EP126.ckpt" #FIXME
+    histoName = ["lep1pt", "lep1eta", "lep2pt", "lep2eta", "jet1pt", "jet1eta", "jet2pt", "jet2eta", "MET", "dr_ll_jj", "dphijj", "detajj", "Mll"]
+    HistP = HistProduction(ROOT_LL_TTTL)
+    Hist_files = HistP.MakeHistoROOT(binNum=20,histoName=histoName)  # FIXME Turn this on if histo production required.
+    print(Hist_files)
+    HistoCom = HistoCompare(Hist_files)
+    HistoCom.CompareHistoROOT_general()
+   
+    move_command = "mv *.pdf " + inputFile[3]
+    os.system(move_command)
+    print(move_command)
 
-    InputROOT_OutputTXT(infileROOT=infileROOT, ModelName=ModelName)
+    move_command = "mv Estimated_*_hist.root " + inputFile[3]
+    os.system(move_command)
+    print(move_command)
 
+    move_command = "mv *.root " + inputFile[3]
+    os.system(move_command)
+    print(move_command)
 
 if __name__=="__main__":
     main()

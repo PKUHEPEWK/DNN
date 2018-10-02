@@ -74,8 +74,8 @@ class New_tree(object):
 
 
 def main():
-    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_250M.root"
-    #infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoData_DECAY_1M.root"
+    #infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_250M.root"
+    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root"
     Test = New_tree(infile)
     Test.Generate(tag="TTTL_LL")
 
