@@ -134,7 +134,7 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     #N_validation = ARRAY.shape[0]-(N_train)
     print(X_part.shape,"x_train"); print(Y_part.shape)
     #model = DNN(n_in=26, n_hiddens=[150], n_out=2)  ##FIXME TODO
-    model = DNN(n_in=13, n_hiddens=[200,200,200,200,200,200], n_out=2)  ##FIXME TODO
+    model = DNN(n_in=13, n_hiddens=[200,200,200,200,200], n_out=2)  ##FIXME TODO
     model.fit_classify_model_read(ModelName=ModelName)
     accuracy = model.evaluate(X_part, Y_part)
     print('accuracy:', accuracy)
@@ -187,14 +187,13 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     '''
 
 def main():
-    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT_LL.root"
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT_TTTL.root"
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_LL.root"
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL.root"
+#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum1250000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT_LL.root"
+#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum1250000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT_TTTL.root"
+#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum1250000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_LL.root"
+#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum1250000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL.root"
+    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab_MERGED.root"
 
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoData_DECAY_1M_MERGED.root"
-
-    ModelName = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_6+Node_200+BatchSize_100/SSWW_tensor_TTTL-LL_comp_EP126.ckpt" #FIXME
+    ModelName = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum1250000/LayerNum_5+Node_200+BatchSize_100/SSWW_tensor_TTTL-LL_comp_EP10.ckpt" #FIXME
 
     InputROOT_OutputTXT(infileROOT=infileROOT, ModelName=ModelName)
 

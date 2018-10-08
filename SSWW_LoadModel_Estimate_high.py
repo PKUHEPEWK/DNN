@@ -139,7 +139,7 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     #N_validation = ARRAY.shape[0]-(N_train)
     print(X_part.shape,"x_train"); print(Y_part.shape)
     #model = DNN(n_in=26, n_hiddens=[150], n_out=2)  ##FIXME TODO
-    model = DNN(n_in=13, n_hiddens=[200,200], n_out=2)  ##FIXME TODO
+    model = DNN(n_in=13, n_hiddens=[200,200,200,200,200], n_out=2)  ##FIXME TODO
     model.fit_classify_model_read(ModelName=ModelName)
     accuracy = model.evaluate(X_part, Y_part)
     print('accuracy:', accuracy)
@@ -190,12 +190,12 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     return [ROOT_Estimated_LL,ROOT_Estimated_TTTL]
 
 def main():
-#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum280000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT.root" #FIXME
-    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180925_TrainENum4000000/LayerNum_2+Node_200+BatchSize_100/TEST_TRAIN_ROOT/PseudoDATA_3ab_MERGED.root" #FIXME
+    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum1250000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/TEST_ROOT.root" #FIXME
+#    infileROOT = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180925_TrainENum4000000/LayerNum_2+Node_200+BatchSize_100/TEST_TRAIN_ROOT/PseudoDATA_3ab_MERGED.root" #FIXME
     PseudoDATA = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root" #FIXME PseudoDATA
 
     inputFile = read_file_name_root(infileROOT)
-    ModelName = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180925_TrainENum4000000/LayerNum_2+Node_200+BatchSize_100/SSWW_tensor_TTTL-LL_comp_EP5.ckpt" #FIXME
+    ModelName = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum1250000/LayerNum_5+Node_200+BatchSize_100/SSWW_tensor_TTTL-LL_comp_EP10.ckpt" #FIXME
     ROOT_LL_TTTL = InputROOT_OutputTXT(infileROOT=infileROOT, ModelName=ModelName)
     #print(ROOT_LL_TTTL)
     Appending = [inputFile[3]+"TEST_ROOT_LL.root",inputFile[3]+"TEST_ROOT_TTTL.root"]

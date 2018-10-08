@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from c0_READ_PATH_FILE import read_file_name
 
 def Plotting(text_infile="Loss_epoch.txt"):
     data = open(text_infile,'r')
@@ -26,7 +27,8 @@ def Plotting(text_infile="Loss_epoch.txt"):
     ax_err.set_ylabel('Error/Accuracy Scale', color='blue')
 
     ax_loss.legend(loc=0)
-    plt.savefig("Plot_Loss_epoch.pdf")
+    SaveDir = read_file_name(text_infile)[3] + "/Plot_Loss_epoch.pdf"
+    plt.savefig(SaveDir)
     #plt.show()
     
 def main():

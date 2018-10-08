@@ -165,7 +165,14 @@ class DNN(object):
         return X
     '''
 
-    def fit_classify(self, X_train, Y_train, X_validation, Y_validation, epochs=100, batch_size=100, p_keep=0.5, earlyStop=30, model_name='tensorflow_model',verbose=1):
+    def fit_classify(self, X_train, Y_train, X_validation, Y_validation, epochs=100, batch_size=100, p_keep=0.5, earlyStop=30, model_name='tensorflow_model',verbose=1, epoch_txt_loca="."):
+
+        ###Make Loss_epoch.txt
+        infile = epoch_txt_loca+"/Loss_epoch.txt"
+        OF = open(infile,"w")
+        OF.write("Epoch Val_loss Val_acc Train_loss Train_acc\n")
+        ###
+
         Model_NAME = "/" + model_name + "_EP{}.ckpt"
         #if(Data_normalize):
         #    X_train = self.Data_normalization(X_train)
@@ -204,6 +211,7 @@ class DNN(object):
         for epoch in range(epochs):
 #            print("Epoch :",epoch+1, " :: ", (str(epoch+1)+"/"+str(epochs)),end='\t')
             print "Epoch :", epoch+1, " :: ", (str(epoch+1)+"/"+str(epochs)),"\t",
+            OF.write("%s " %str(epoch+1))
             X_, Y_ = shuffle(X_train, Y_train)
 
             for i in range(n_batches):
@@ -217,6 +225,7 @@ class DNN(object):
             self._val_history['val_acc'].append(val_acc)
             #print('val_loss =',val_loss, '\t', 'val_acc =',val_acc,end='\t')
             print 'val_loss =', val_loss, '\t', 'val_acc =', val_acc, '\t',
+            OF.write("%s " %str(val_loss)); OF.write("%s " %str(val_acc));
 
             loss_ = round(loss.eval(session=sess, feed_dict={x: X_train, t:Y_train, keep_prob:1.0}),4)
             accuracy_ = round(accuracy.eval(session=sess, feed_dict={x: X_train, t:Y_train, keep_prob:1.0}),4)
@@ -225,7 +234,7 @@ class DNN(object):
 
             if verbose:
                 print 'train_loss =', loss_,'\t', 'train_accuracy =',accuracy_
-
+                OF.write("%s " %str(loss_)); OF.write("%s\n" %str(accuracy_));
             if((one_third==0) & (epochs//(epoch+1) == 3)): 
                 one_third = 1
                 model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
@@ -236,10 +245,12 @@ class DNN(object):
                 print 'Model has been saved to:', model_path
 
             if early_stopping.validate(val_loss):
+                OF.close()
                 break
 
         model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
         print 'Model has been saved to:', model_path
+        OF.close()
         return self._history
 
 
@@ -251,11 +262,17 @@ class DNN(object):
         return total_error
 
 
-    def fit_regression(self, X_train, Y_train, X_validation, Y_validation, epochs=100, batch_size=100, p_keep=0.5, earlyStop=30, model_name='tensorflow_model',verbose=1):
+    def fit_regression(self, X_train, Y_train, X_validation, Y_validation, epochs=100, batch_size=100, p_keep=0.5, earlyStop=30, model_name='tensorflow_model',verbose=1, epoch_txt_loca="."):
         Model_NAME = "/" + model_name + "_EP{}.ckpt"
         #if(Data_normalize):
         #    X_train = self.Data_normalization(X_train)
         #    X_validation = self.Data_normalization(X_validation)
+
+        ###Make Loss_epoch.txt
+        infile = epoch_txt_loca+"/Loss_epoch.txt"
+        OF = open(infile,"w")
+        OF.write("Epoch Val_loss Val_error Train_loss Train_error\n")
+        ###
 
         MODEL_DIR = os.path.join(os.path.dirname(__file__),'tens_model_reg')
         if os.path.exists(MODEL_DIR) is False:
@@ -290,6 +307,7 @@ class DNN(object):
         for epoch in range(epochs):
             #print("Epoch :",epoch+1, " :: ", (str(epoch+1)+"/"+str(epochs)),end='\t')
             print "Epoch :",epoch+1, " :: ", (str(epoch+1)+"/"+str(epochs)), '\t',
+            OF.write("%s " %str(epoch+1))
             X_, Y_ = shuffle(X_train, Y_train)
 
             for i in range(n_batches):
@@ -303,6 +321,7 @@ class DNN(object):
             self._val_history['val_acc'].append(val_acc)
             #print('val_loss =',val_loss, '\t', 'val_error =',val_acc,end='\t')
             print 'val_loss =',val_loss, '\t', 'val_error =',val_acc, '\t',
+            OF.write("%s " %str(val_loss)); OF.write("%s " %str(val_acc));
             #print('val_loss =',val_loss, '\t')
 
             #self_error = accuracy.eval(session=sess, feed_dict={x:X_validation, t:Y_validation, keep_prob:1.0})
@@ -317,6 +336,7 @@ class DNN(object):
 
             if verbose:
                 print 'train_loss =', loss_,'\t', 'train_error =',accuracy_
+                OF.write("%s " %str(loss_)); OF.write("%s\n" %str(accuracy_));
                 #print ('train_loss =', loss_,'\t')
 
             if((one_third==0) & (epochs//(epoch+1) == 3)):
@@ -329,10 +349,12 @@ class DNN(object):
                 print 'Model has been saved to:', model_path
 
             if early_stopping.validate(val_loss):
+                OF.close()
                 break
 
         model_path = saver.save(sess, MODEL_DIR + Model_NAME.format(epoch+1))
         print 'Model has been saved to:', model_path
+        OF.close()
         return self._history
 
 

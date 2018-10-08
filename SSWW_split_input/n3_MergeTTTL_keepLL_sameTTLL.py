@@ -87,10 +87,10 @@ class New_tree(object):
 
 
 def main():
-    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_250M.root"
+    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_2p5M.root"
     #infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/small_test_Ntuple.root"
     Test = New_tree(infile)
-    Test.Generate(tag="TTTL_LL_comparable", TTTL_Multi = 3) #FIXME TTTL_Multi 
+    Test.Generate(tag="TTTL_LL_comparable", TTTL_Multi = 2) #FIXME TTTL_Multi 
 
 if __name__=="__main__":
     main()

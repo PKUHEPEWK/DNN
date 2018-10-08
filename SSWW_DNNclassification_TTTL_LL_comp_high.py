@@ -8,25 +8,25 @@ from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
 
-model = DNN(n_in=13, n_hiddens=[200,200,200], n_out=2) #TODO FIXME
+model = DNN(n_in=13, n_hiddens=[200], n_out=2) #TODO FIXME
 #epochs = 100
-epochs = 30
+epochs = 5
 earlyStop =  20#20       #TODO FIXME
 batch_size = 100        #TODO FIXME
-Date=20180925          #TODO FIXME
-Layer_NUM= 3             #TODO FIXME
+Date=20181005          #TODO FIXME
+Layer_NUM= 1            #TODO FIXME
 Node_on_Each_layer=200   #TODO FIXME
 #N_train = 680000         #TODO FIXME
 #N_train = 2000000
-N_train = 4000000
+N_train = 950000
 Model_name = "High_"+str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
 Make_dir = "mkdir -p "+ "tens_model_class/"+Model_name
 os.system(Make_dir)
 model_name = Model_name +"/"+ "SSWW_tensor_TTTL-LL_comp"
 
 #data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_250M_comparable_3.root')
-#data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_230M.root')
-data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/TEST_Multiplied_LLs/Multiplied_LLs.root')
+data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_2p5M_comparable_2.root') #FIXME
+#data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/TEST_Multiplied_LLs/Multiplied_LLs.root')
 tree = data.Get('tree')
 
 ####################################### Input DATA Sets !!!!! 
@@ -258,13 +258,14 @@ del TRAIN_nplist
 ## </SAVE TRAIN ROOT>
 
 
-
-model.fit_classify(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name)
+epoch_txt_loca="tens_model_class/"+Model_name
+model.fit_classify(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name, epoch_txt_loca=epoch_txt_loca)
 accuracy = model.evaluate(X_test, Y_test)
 print('accuracy:', accuracy)
 plot_name = "tens_model_class/"+Model_name+"/"+"SSWW_classification_TTTL-LL_comp.pdf"
 model.Plot_acc_loss(plot_name = plot_name)
-
+Input_txt = epoch_txt_loca + "/Loss_epoch.txt"
+Plotting(text_infile=Input_txt)
 
 
 

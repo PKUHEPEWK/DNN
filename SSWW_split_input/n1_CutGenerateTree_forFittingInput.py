@@ -88,7 +88,7 @@ class SplitROOT(object):
         ITER = dirlist.MakeIterator()
         key = ITER.Next()
 
-        outfileName = os.getcwd() + "/" + FileNameList[0] + "_cut_LL.root"       #FIXME 
+        outfileName = os.getcwd() + "/" + FileNameList[0] + "_cut_TTTL.root"       #FIXME 
         print("CREATING... :",outfileName)        
         outfile = TFile(outfileName,"RECREATE")
 
@@ -119,8 +119,8 @@ class SplitROOT(object):
                         continue          
                     list(DicNumpyArray_branch_w.values())[k][0] = list(DicNumpyArray_branch.values())[k][0]
                 if(True 
-                   & (list(DicNumpyArray_branch.values())[0][0] == 1)  # LL  #FIXME
-                   #& (list(DicNumpyArray_branch.values())[0][0] == 0)  # TT and TL  #FIXME
+                   #& (list(DicNumpyArray_branch.values())[0][0] == 1)  # LL  #FIXME
+                   & (list(DicNumpyArray_branch.values())[0][0] == 0)  # TTTL  #FIXME
                   ): 
                     ijk = ijk + 1
                     tree_f.Fill()
@@ -155,7 +155,7 @@ class SplitROOT(object):
 
 
 def main():
-    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_250M.root" 
+    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_2p5M.root" 
     test_split = SplitROOT(infile) 
     branchList = test_split.get_branch_list_all()
     print(branchList)

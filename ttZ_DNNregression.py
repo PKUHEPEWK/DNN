@@ -8,16 +8,16 @@ from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
 
-model = DNN(n_in=29, n_hiddens=[150,150], n_out=1)
+model = DNN(n_in=29, n_hiddens=[150,150,150,150,150,150,150,150,150,150], n_out=1)
 MEM = True #FIXME 'False' for KIN
 epochs = 1000
 earlyStop = 70
-batch_size = 200
-Date=20180913          #TODO FIXME
-Layer_NUM= 1              #TODO FIXME
-Node_on_Each_layer=20   #TODO FIXME
+batch_size = 50
+Date=20181005          #TODO FIXME
+Layer_NUM= 10              #TODO FIXME
+Node_on_Each_layer=150   #TODO FIXME
 #model_name = "ttZ_tensor"
-N_train = 1800000
+N_train = 2000000
 Model_name = str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
 Make_dir = "mkdir -p "+ "tens_model_reg/"+Model_name
 os.system(Make_dir)
@@ -244,8 +244,8 @@ del Train_List
 del TRAIN_nplist
 ## </SAVE TRAIN ROOT>
 
-
-model.fit_regression(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name)
+epoch_txt_loca="tens_model_reg/"+Model_name
+model.fit_regression(X_train, Y_train, X_validation, Y_validation, epochs=epochs, batch_size=batch_size, p_keep=0.5, earlyStop=earlyStop, model_name = model_name, epoch_txt_loca=epoch_txt_loca)
 plot_name = "tens_model_reg/"+Model_name+"/"+"ttZ_DNN_reg.pdf"
 model.Plot_acc_loss(plot_name = plot_name)
 
