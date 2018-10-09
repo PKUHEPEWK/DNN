@@ -378,12 +378,25 @@ class DNN(object):
         self._sess = sess
         saver.restore(sess, ModelName)
 
-    '''
-    def accuracy(self, y, t):
-        correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(t,1))
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        return accuracy
-    ''' 
+    def regression_model_read(self, ModelName, keep_prob=0.5):
+        x = tf.placeholder(tf.float32, shape=[None,self.n_in])
+        t = tf.placeholder(tf.float32, shape=[None,self.n_out])
+        keep_prob = tf.placeholder(tf.float32)
+
+        self._x = x
+        self._t = t
+        self._keep_prob = keep_prob
+
+        y = self.inference_regression(x,keep_prob)
+        self._y = y
+        loss = self.loss_regression(y,t)
+        train_step = self.training(loss)
+        accuracy = self.regression_accuracy(y,t) 
+        saver = tf.train.Saver()
+        sess = tf.Session()
+        self._sess = sess
+        saver.restore(sess, ModelName)
+
 
     def Indicate_classified_LL_TTTL(self, X, Y):
 #        prediction = tf.argmax(self._y,1)
@@ -400,6 +413,13 @@ class DNN(object):
         return_tuple = (LL,TTTL,eval_pred)
         return return_tuple
 
+    def Indicated_regressed_ttZ(self,X,Y):
+        prediction = self._y
+        eval_pred = prediction.eval(session=self._sess, feed_dict={self._x: X, self._t: Y, self._keep_prob: 1.0})
+        print("Regressed Y Value :",eval_pred)
+        return eval_pred
+
+
 
     def evaluate(self, X_test, Y_test):
         accuracy = self.accuracy(self._y, self._t)
@@ -408,6 +428,10 @@ class DNN(object):
         #accuracy_ = accuracy.eval(session=self._sess, feed_dict={self._x:X_test, self._t:Y_test, self._keep_prob:1.0}) 
         #return accuracy_
         #return self.accuracy.eval(session=self._sess, feed_dict={self._x:X_test, self._t:Y_test, self._keep_prob:1.0})
+
+    def regression_evaluate(self, X_test, Y_test):
+        accuracy = self.regression_accuracy(self._y, self._t)
+        return accuracy.eval(session=self._sess, feed_dict={self._x: X_test, self._t: Y_test, self._keep_prob: 1.0})
 
     def Plot_acc_loss(self,plot_name='tensorflow_test.pdf'):
         history_epochs = len(self._val_history['val_loss'])
@@ -471,7 +495,7 @@ def main():
 
     '''
     # 1. Loading existing model
-    model.fit_classify_model_read(ModelName="/Users/leejunho/Desktop/git/python3Env/group_study/DNN_study/chapter04/tens_model/mnist_tensor_EP20.ckpt") # TODO for load in store Model
+    model.fit_classify_model_read(ModelName="/Users/leejunho/Desktop/git/python3Env/group_study/DNN_study/chapter04/tens_model/mnist_tensor_EP20.ckpt") # for loading in stored Model
     accuracy = model.evaluate(X_test, Y_test)
     print('accuracy:', accuracy)
     '''

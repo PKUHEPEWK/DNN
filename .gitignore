@@ -3,6 +3,7 @@
 *.root
 *.pdf
 *.eps
+*.swp
 tens_model
 tens_model_class
 tens_model_reg

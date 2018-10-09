@@ -60,7 +60,7 @@ class HistProduction:
                 JHisto_list.append(temp_hist)
             del BinMinMax_list
 
-            print "Filling Histogram :",Name
+            print "Filling ROOT Histogram :",Name
             for j in range(Entries):
                 Tree.GetEntry(j)
                 for kk,hName in enumerate(histoName):
@@ -130,7 +130,7 @@ class HistProduction:
                 JHisto_list.append(temp_hist)
             #del BinMinMax_list
 
-            print "Filling Histogram :",Name
+            print "Filling ROOT Histogram :",Name
             for j in range(Entries):
                 Tree.GetEntry(j)
                 Entries = Tree.GetEntries();
@@ -156,6 +156,92 @@ class HistProduction:
         Hist_tuple = tuple(Hist_list)
         del Hist_list
         return Hist_tuple
+
+
+
+    def MakeHistoROOT_ttZ(self,binNum=20, histoName=["Real","Regressed"]):
+        tfile_list = self.Read_Data_n_MC()[0]
+        #print(tfile_list)
+        Hist_list = []
+  
+        BinMinMax_list = []
+        for i in range(len(tfile_list)):  # Specify Histogram bin-range, bin-num.. ROTATE on all files
+            Tree = tfile_list[i].Get("tree")
+            Entries = Tree.GetEntries(); #print(Entries)
+            #Name = self.Read_Data_n_MC()[1][i]
+            #outfile = TFile(Name+"_hist.root","RECREATE")
+            #Hist_list.append(read_file_name_root(Name+"_hist.root")[2])
+
+            temp_BinMinMax_list = []
+            for jj in range(Entries):
+                Tree.GetEntry(jj)
+                for kk,hName in enumerate(histoName):
+                    BranchName = "Tree." + hName
+                    if(jj==0):
+                        minval=eval(BranchName); maxval=eval(BranchName);
+                        temp_list=[minval,maxval]
+                        temp_BinMinMax_list.append(temp_list)
+                    else:
+                        if(eval(BranchName)<temp_BinMinMax_list[kk][0]):  temp_BinMinMax_list[kk][0] = eval(BranchName)
+                        if(eval(BranchName)>temp_BinMinMax_list[kk][1]):  temp_BinMinMax_list[kk][1] = eval(BranchName)
+            print("Temp Bin Range of histograms :", temp_BinMinMax_list)
+            if i == 0 : BinMinMax_list = list(temp_BinMinMax_list)
+            else:
+                for num1 in range(len(BinMinMax_list)):
+                    for num2 in range(len(BinMinMax_list[num1])):
+                        if((num2==0) & (BinMinMax_list[num1][num2] > temp_BinMinMax_list[num1][num2])):
+                            BinMinMax_list[num1][num2] = temp_BinMinMax_list[num1][num2]
+                        elif((num2==1) & (BinMinMax_list[num1][num2] < temp_BinMinMax_list[num1][num2])):
+                            BinMinMax_list[num1][num2] = temp_BinMinMax_list[num1][num2]
+        F_BinMinMax = []
+        print("Final Bin Range of histograms :", BinMinMax_list)
+        if BinMinMax_list[0][0] < BinMinMax_list[1][0]: F_BinMinMax.append(BinMinMax_list[0][0])
+        else: F_BinMinMax.append(BinMinMax_list[1][0])
+        if BinMinMax_list[0][1] > BinMinMax_list[1][1]: F_BinMinMax.append(BinMinMax_list[0][1]) 
+        else: F_BinMinMax.append(BinMinMax_list[1][1])     
+        print("Merged Bin Range of Histogram :", F_BinMinMax)
+ 
+        del Tree
+
+        ################################################### CREATE FILE ################################################
+        for i in range(len(tfile_list)):
+            JHisto_list = []
+            Tree = tfile_list[i].Get("tree")
+            Entries = Tree.GetEntries();
+            #print(BinMinMax_list) ##
+            Name = self.Read_Data_n_MC()[1][i]
+            outfile = TFile(Name+"_hist.root","RECREATE")
+            Hist_list.append(read_file_name_root(Name+"_hist.root")[2])
+            for num, hName2 in enumerate(histoName):
+                #print(BinMinMax_list[num][1], BinMinMax_list[num][0])  ##
+                #RANGE = BinMinMax_list[num][1] - BinMinMax_list[num][0]
+                RANGE = F_BinMinMax[1] - F_BinMinMax[0]
+                #temp_hist = TH1D(hName2,hName2,binNum,BinMinMax_list[num][0]-RANGE/8,BinMinMax_list[num][1]+RANGE/8)
+                temp_hist = TH1D(hName2,hName2,binNum,F_BinMinMax[0]-RANGE/8,F_BinMinMax[1]+RANGE/8)
+                JHisto_list.append(temp_hist)
+            print("HIST LISTs:",JHisto_list)
+            #del BinMinMax_list
+
+            print "Filling ROOT Histogram :",Name
+            for j in range(Entries):
+                Tree.GetEntry(j)
+                Entries = Tree.GetEntries();
+                for kk,hName in enumerate(histoName):
+                    BranchName = "Tree." + hName
+                    JHisto_list[kk].Fill(eval(BranchName))
+            del JHisto_list
+            outfile.Write()
+            outfile.Close()
+
+        del BinMinMax_list
+        for i in range(len(tfile_list)):
+            tfile_list[i].Close()
+        Hist_tuple = tuple(Hist_list)
+        del Hist_list
+        return Hist_tuple
+
+
+
 
 
 class HistoCompare:
@@ -233,8 +319,98 @@ class HistoCompare:
             cv.SaveAs(name)
             del cv
 
+class HistoCompare_ttZ:
+    def __init__(self, fileList):
+        self.filelist = fileList
+        self.namelist = [read_file_name_root(i)[0] for i in fileList]
+        #print(self.filelist)
 
-#/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA
+    def Read_Data_n_MC(self):
+        return_list = []
+        return_list1 = []
+        return_list2 = []
+        for i in range(len(self.filelist)):
+            tfile = TFile(read_file_name_root(self.filelist[i])[2],"READ")
+            return_list1.append(tfile)
+            return_list2.append(read_file_name_root(self.filelist[i])[0])
+        return_list.append(return_list1)
+        return_list.append(return_list2)
+        del return_list1; del return_list2
+        return_tuple = tuple(return_list)
+        del return_list
+        print("!@#!@##!",return_tuple)
+        return return_tuple
+
+    def CompareHistoROOT_general(self):
+        tfile_list = self.Read_Data_n_MC()[0]
+        Hist_list = []
+        for i in range(len(tfile_list)):
+            dirlist = tfile_list[i].GetListOfKeys()
+            ITER = dirlist.MakeIterator()
+            key = ITER.Next()
+            temp_list = []
+            while key:
+                temp_list.append(key.ReadObj())
+                key = ITER.Next()
+            Hist_list.append(temp_list)
+        print("!!!!!!!",Hist_list)
+
+        cv = TCanvas("cv","cv",1200,900);
+        legend = TLegend(0.8,0.8,1.1,1.0)
+        name = "TrainTest_Compare.pdf"
+        for i in range(len(Hist_list[0])):
+            for j in range(len(Hist_list)): # files nums
+                Scale_factor = 1.0/float(Hist_list[j][i].GetEntries()); #print(Scale_factor)
+                Hist_list[j][i].Scale(Scale_factor)
+                Hist_list[j][i].SetStats(0);
+                if j==0:
+                    #Hist_list[j][i].SetStats(0);
+                    if(i==0): Hist_list[j][i].SetLineColor(kBlue)
+                    else: Hist_list[j][i].SetLineColor(kBlack)
+                    Hist_list[j][i].GetXaxis().SetTitle("MEM")
+                    Hist_list[j][i].GetYaxis().SetTitle("Proportion")
+                    if(i==0): Hist_list[j][i].Draw("h"); legend.AddEntry(Hist_list[j][i],"Regress, test")
+                    else: Hist_list[j][i].Draw("hsame"); legend.AddEntry(Hist_list[j][i],"Truth, test")
+                else: 
+                    if(i==0): Hist_list[j][i].SetLineColor(kRed); Hist_list[j][i].SetMarkerColor(kRed);
+                    else: Hist_list[j][i].SetLineColor(kBlack); Hist_list[j][i].SetMarkerColor(kBlack);
+                    Hist_list[j][i].Draw("Psame"); 
+                    Hist_list[j][i].SetMarkerStyle(20);
+                    if(i==0): legend.AddEntry(Hist_list[j][i],"Regress, train");
+                    else: legend.AddEntry(Hist_list[j][i],"Truth, train");
+        legend.Draw()
+        cv.SaveAs(name)
+        del cv
+
+        cv = TCanvas("cv","cv",1200,900);
+        cv.SetLogy()
+        legend = TLegend(0.8,0.8,1.1,1.0)
+        name = "TrainTest_Compare_log.pdf"
+        for i in range(len(Hist_list[0])):
+            for j in range(len(Hist_list)): # files nums
+                Scale_factor = 1.0/float(Hist_list[j][i].GetEntries()); #print(Scale_factor)
+                Hist_list[j][i].Scale(Scale_factor)
+                Hist_list[j][i].SetStats(0);
+                if j==0:
+                    #Hist_list[j][i].SetStats(0);
+                    if(i==0): Hist_list[j][i].SetLineColor(kBlue)
+                    else: Hist_list[j][i].SetLineColor(kBlack)
+                    Hist_list[j][i].GetXaxis().SetTitle("MEM")
+                    Hist_list[j][i].GetYaxis().SetTitle("Proportion")
+                    if(i==0): Hist_list[j][i].Draw("h"); legend.AddEntry(Hist_list[j][i],"Regress, test")
+                    else: Hist_list[j][i].Draw("hsame"); legend.AddEntry(Hist_list[j][i],"Truth, test")
+                else: 
+                    if(i==0): Hist_list[j][i].SetLineColor(kRed); Hist_list[j][i].SetMarkerColor(kRed);
+                    else: Hist_list[j][i].SetLineColor(kBlack); Hist_list[j][i].SetMarkerColor(kBlack);
+                    Hist_list[j][i].Draw("Psame"); 
+                    Hist_list[j][i].SetMarkerStyle(20);
+                    if(i==0): legend.AddEntry(Hist_list[j][i],"Regress, train");
+                    else: legend.AddEntry(Hist_list[j][i],"Truth, train");
+        legend.Draw()
+        cv.SaveAs(name)
+        del cv
+
+
 def main():
     
     Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_TTTL.root")

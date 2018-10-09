@@ -1,6 +1,8 @@
 DNN_tensorflow_class.py : Module of DNN, in terms of Tensorflow
 DNN_tensorflow_class_py2.py : Module of DNN, with python2, in terms of Tensorflow
 
+
+============================= SSWW =============================
 SSWW_DNNclassification.py : DNN classification, with All Events of LL, TT and TL. Triple classification.
 SSWW_DNNclassification_TTTL_LL.py : DNN classification, with All Events of LL and TT&TL. Binary classification.
 SSWW_DNNclassification_TTTL_LL_comp.py : DNN classification, with comparable events amount of LL and TT&TL. Binary classification.
@@ -11,4 +13,7 @@ Load Model and check certain Varible distribution : SSWW_LoadModel_Estimate_high
 Template fit : SSWW_fitting/n3_Template_fit_perform.C
 
 
+============================= ttZ =============================
+ttZ_DNNregression.py  :  To train & obtain models
+Load Model and check Over-fitting & Accuracy : ttZ_LoadModel_Compare.py -> ttZ_Compare_Train_test.py
 

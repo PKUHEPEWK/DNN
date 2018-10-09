@@ -7,13 +7,14 @@ from root_numpy import fill_hist
 from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
+from Epoch_loss_plots import Plotting
 
 model = DNN(n_in=13, n_hiddens=[200], n_out=2) #TODO FIXME
 #epochs = 100
 epochs = 5
 earlyStop =  20#20       #TODO FIXME
 batch_size = 100        #TODO FIXME
-Date=20181005          #TODO FIXME
+Date=20181009          #TODO FIXME
 Layer_NUM= 1            #TODO FIXME
 Node_on_Each_layer=200   #TODO FIXME
 #N_train = 680000         #TODO FIXME

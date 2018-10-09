@@ -7,6 +7,7 @@ from root_numpy import fill_hist
 from root_numpy import root2array, tree2array, array2root, array2tree
 from root_numpy import testdata
 from sklearn.model_selection import train_test_split
+from c0_READ_PATH_FILE_ROOT import read_file_name_root
 
 model = DNN(n_in=29, n_hiddens=[150,150,150,150,150,150,150,150,150,150], n_out=1)
 MEM = True #FIXME 'False' for KIN
