@@ -2,10 +2,11 @@
 void n3_Template_fit_perform()
 {
     
-    TFile *fileSignal = new TFile("n1_2p5m_result/PseudoDATA_3ab_hist.root","READ"); // mini stats
-    TFile *fileMC0 = new TFile("n1_2p5m_result/SS_2p5M_cut_LL_hist.root","READ");
-    TFile *fileMC1 = new TFile("n1_2p5m_result/SS_2p5M_cut_TTTL_hist.root","READ"); //TODO : add files if there are
+    TFile *fileSignal = new TFile("n1_2p5m_result_8bins/PseudoDATA_3ab_hist.root","READ"); // mini stats
+    TFile *fileMC0 = new TFile("n1_2p5m_result_8bins/SS_2p5M_cut_LL_hist.root","READ");
+    TFile *fileMC1 = new TFile("n1_2p5m_result_8bins/SS_2p5M_cut_TTTL_hist.root","READ"); //TODO : add files if there are
     
+
     /*
     TFile *fileSignal = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum240000/LayerNum_1+Node_20+BatchSize_100/TEST_TRAIN_ROOT/Ntuple_PseudoData_DECAY_1M_MERGED_tree_hist10.root","READ");
     TFile *fileMC0 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180924_TrainENum240000/LayerNum_1+Node_20+BatchSize_100/TEST_TRAIN_ROOT/TRAIN_ROOT_LL_tree_hist10.root","READ");
@@ -13,14 +14,21 @@ void n3_Template_fit_perform()
     */
 
     /*
-    TFile *fileSignal = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20180925_TrainENum680000/LayerNum_6+Node_200+BatchSize_100/TEST_TRAIN_ROOT/PseudoDATA_3ab_hist.root","READ");
-    TFile *fileMC0 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum635000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/Estimated_LL_hist.root","READ");
-    TFile *fileMC1 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/High_20181003_TrainENum635000/LayerNum_5+Node_200+BatchSize_100/TEST_TRAIN_ROOT/Estimated_TTTL_hist.root","READ");
+    TFile *fileSignal = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/High_20181010_TrainENum1000000/LayerNum_7+Node_150+BatchSize_10/TEST_TRAIN_ROOT/PseudoDATA_3ab_hist.root","READ");
+    TFile *fileMC0 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/High_20181010_TrainENum1000000/LayerNum_7+Node_150+BatchSize_10/TEST_TRAIN_ROOT/Estimated_LL_hist.root","READ");
+    TFile *fileMC1 = new TFile("/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/High_20181010_TrainENum1000000/LayerNum_7+Node_150+BatchSize_10/TEST_TRAIN_ROOT/Estimated_TTTL_hist.root","READ");
     */
 
     //TString HistoName = "LL"; // TODO
     //TString HistoName = "lep1pt"; // TODO
     TString HistoName = "dphijj"; // TODO
+    //TString HistoName = "jet1pt"; // TODO
+    //TString HistoName = "MET"; // TODO
+    //TString HistoName = "Mjj"; // TODO
+    //TString HistoName = "detajj"; // TODO
+    //TString HistoName = "dr_ll_jj"; // TODO
+    //TString HistoName = "jet1eta"; // TODO
+
     const int MCFracs = 2;   //////TODO : the MC fraction numbers
     //const int Rotations = 2;
     double br[MCFracs],brer[MCFracs];
@@ -68,8 +76,8 @@ void n3_Template_fit_perform()
     fit->Constrain(0,0.0,1.0);
     //fit->Constrain(0,0.0,0.2); // FIXME
     fit->Constrain(1,0.0,1.0);  // TODO : constrains on MC fractions
-    //fit->SetRangeX(2,7);  // TODO : Perform fitting on given bin range
-    fit->SetRangeX(5,15);
+    fit->SetRangeX(3,6);  // TODO : Perform fitting on given bin range
+    //fit->SetRangeX(5,15);
 
     Int_t status = fit->Fit();
     std::cout << "fit status: " << status << std::endl;
