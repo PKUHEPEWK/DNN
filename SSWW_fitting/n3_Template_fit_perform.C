@@ -76,7 +76,7 @@ void n3_Template_fit_perform()
     fit->Constrain(0,0.0,1.0);
     //fit->Constrain(0,0.0,0.2); // FIXME
     fit->Constrain(1,0.0,1.0);  // TODO : constrains on MC fractions
-    fit->SetRangeX(3,6);  // TODO : Perform fitting on given bin range
+    //fit->SetRangeX(3,6);  // TODO : Perform fitting on given bin range
     //fit->SetRangeX(5,15);
 
     Int_t status = fit->Fit();

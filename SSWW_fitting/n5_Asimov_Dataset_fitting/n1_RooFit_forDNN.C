@@ -7,33 +7,24 @@
 #include "TAxis.h"
 using namespace RooFit ;
 
-void n1_RooFit()
+void n1_RooFit_forDNN()
 {
-/*
-    TFile *fileSignal = new TFile("../n1_2p5m_result_30bins/PseudoDATA_3ab_hist.root","READ"); // mini stats
-    TFile *fileMC0 = new TFile("../n1_2p5m_result_30bins/SS_2p5M_cut_LL_hist.root","READ");
-    TFile *fileMC1 = new TFile("../n1_2p5m_result_30bins/SS_2p5M_cut_TTTL_hist.root","READ"); //TODO : add files if there are
-    TString HistoName = "dphijj";  //FIXME 
-//    TString HistoName = "lep1pt";  //FIXME 
+    TFile *all = new TFile("Asimov_Dataset_forDNN.root","READ"); //FIXME
+    Int_t bins = 20;  //bins=bins;
+    TString HistoName = "DNN";  //FIXME 
     TH1D *data;
     TH1D *mc0;
     TH1D *mc1;
-    data = (TH1D*)fileSignal->Get(HistoName);
-    mc0  = (TH1D*)fileMC0->Get(HistoName);
-    mc1  = (TH1D*)fileMC1->Get(HistoName);
-*/
-    //TFile *all = new TFile("lep1pt.root","READ");
-    TFile *all = new TFile("dphijj.root","READ");
-    TH1D *data;
-    TH1D *mc0;
-    TH1D *mc1;
-    data = (TH1D*)all->Get("PseudoData");
-    mc0 = (TH1D*)all->Get("LL");
-    mc1 = (TH1D*)all->Get("TTTL");
+    TString histData = "Asimov_data";
+    TString histLL = "LL_LL";    
+    TString histTTTL = "TTTL_LL";
+
+    data = (TH1D*)all->Get(histData);
+    mc0 = (TH1D*)all->Get(histLL);
+    mc1 = (TH1D*)all->Get(histTTTL);
 
 
-//    RooRealVar x("x",HistoName,-1,4);  // FIXME The range: for dphijj
-    RooRealVar x("x","dphijj",-0.5,3.5);  // FIXME The range: for lep1pt
+    RooRealVar x("x",HistoName,0,1);  
     RooDataHist datahist_data("mc0_data","mc0_data",x, data);
     RooDataHist datahist_mc0("mc0_data","mc0_data",x, mc0);
     RooDataHist datahist_mc1("mc1_data","mc1_data",x, mc1);
@@ -47,7 +38,7 @@ void n1_RooFit()
     //RooRealVar fmc1("fmc1","mc1 fraction",0.,1.);
     RooAddPdf model("model","model",RooArgList(pdf_mc0,pdf_mc1),RooArgList(fmc0));
 
-    RooPlot* frame = x.frame(Title("dphijj"),Bins(10));  //FIXME Title 
+    RooPlot* frame = x.frame(Title(HistoName),Bins(bins));  //FIXME Title 
     model.plotOn(frame);
     RooArgSet mc0_component(pdf_mc0);
     RooArgSet mc1_component(pdf_mc1);
@@ -59,6 +50,8 @@ void n1_RooFit()
 
     Double_t LL_fraction = fmc0.getVal();
     Double_t LL_fraction_error = fmc0.getAsymErrorHi();
+    //Double_t TTTL_fraction = fmc1.getVal();
+    //Double_t TTTL_fraction_error = fmc1.getAsymErrorHi();
 
     RooArgSet mc_total(pdf_mc0,pdf_mc1);
     datahist_data.plotOn(frame); 
@@ -68,8 +61,8 @@ void n1_RooFit()
     TCanvas* c = new TCanvas("test_histpdf","test_histpdf",800,400) ; 
     //c->SetLogy(); //FIXME
     frame->Draw();
-//    TLegend *leg = new TLegend(0.7,0.7,0.9,0.9); TPaveText *pt = new TPaveText(0.7,0.5,0.9,0.7,"NDC"); // right  //FIXME 
-    TLegend *leg = new TLegend(0.1,0.7,0.4,0.9); TPaveText *pt = new TPaveText(0.1,0.5,0.4,0.7,"NDC"); // left
+    TLegend *leg = new TLegend(0.7,0.7,0.9,0.9); TPaveText *pt = new TPaveText(0.7,0.5,0.9,0.7,"NDC"); // right  //FIXME 
+//    TLegend *leg = new TLegend(0.1,0.7,0.4,0.9); TPaveText *pt = new TPaveText(0.1,0.5,0.4,0.7,"NDC"); // left
     TLegendEntry* lmc0 = leg->AddEntry(&pdf_mc0,"LL","2 l");
     lmc0->SetLineColor(kRed); lmc0->SetTextColor(kRed); lmc0->SetLineStyle(2);
     TLegendEntry* lmc1 = leg->AddEntry(&pdf_mc1,"TTTL","2l");
@@ -80,11 +73,13 @@ void n1_RooFit()
     leg->Draw();
 
     string w_frac0 = "LL : " +to_string(LL_fraction*100) + "% +-" + to_string(LL_fraction_error*100)+"%";
+//    string w_frac1 = "TTTL : " +to_string(TTTL_fraction*100) + "% +-" + to_string(TTTL_fraction_error*100)+"%";
     pt->AddText(w_frac0.data());
+//    pt->AddText(w_frac1.data());
     pt->Draw();
 
-    c->SaveAs("SSWW_dphijj_10bin_Fit.pdf"); //FIXME
-
+    TString pdfName = "SSWW_"+HistoName+"_Fit.pdf";
+    c->SaveAs(pdfName);
 
 
 }

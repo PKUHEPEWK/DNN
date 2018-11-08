@@ -57,20 +57,31 @@ class MakeBinHisto:
             TreePseudoData.GetEntry(jj)
             HistoPseudoData.Fill(eval("TreePseudoData."+BranchName))
         outfile.Write()
-        outfile.Close()
-#        cv = TCanvas("cv","cv",1200,900);
+        #outfile.Close()
+        cv = TCanvas("cv","cv",1200,900);
+        #cv.SetLogy() #FIXME
+        Scale_factorLL = 1.0/EntriesLL
+        Scale_factorTTTL = 1.0/EntriesTTTL
+        Scale_factorPseudoData = 1.0/EntriesPseudoData
+        HistoLL.Scale(Scale_factorLL)
+        HistoTTTL.Scale(Scale_factorTTTL)
+        HistoPseudoData.Scale(Scale_factorPseudoData)
+        HistoLL.SetStats(0); HistoLL.SetLineColor(kBlack); HistoLL.GetXaxis().SetTitle(BranchName); HistoLL.GetYaxis().SetTitle("Proportion"); HistoLL.Draw("he") 
+        HistoTTTL.SetStats(0); HistoTTTL.SetLineColor(kBlue); HistoTTTL.GetXaxis().SetTitle(BranchName); HistoTTTL.GetYaxis().SetTitle("Proportion"); HistoTTTL.Draw("he same")  
+        #HistoPseudoData.SetStats(0); HistoPseudoData.SetLineColor(kBlack); HistoPseudoData.GetXaxis().SetTitle(BranchName); HistoPseudoData.GetYaxis().SetTitle("Proportion"); HistoPseudoData.Draw("ep same")
 
+        cv.SaveAs(BranchName+".pdf") 
+        outfile.Close()
 
 def main():
     print("Preliminary")
 #    infile = ["../n1_2p5m_result_30bins/PseudoDATA_3ab_hist.root","../n1_2p5m_result_30bins/SS_2p5M_cut_LL_hist.root","../n1_2p5m_result_30bins/SS_2p5M_cut_TTTL_hist.root"] #FIXME
     infile = ["/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_TTTL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root"] #FIXME
-    bin_setting = [20,0,500] #FIXME
-    BranchName = "lep1pt" #FIXME
+    bin_setting = [10,0,3.5] #FIXME
+    BranchName = "dphijj" #FIXME
 
     Exe = MakeBinHisto(infile,bin_setting)
     Exe.MakeHistoROOT(BranchName=BranchName) 
-
 
 if __name__=="__main__":
     main()

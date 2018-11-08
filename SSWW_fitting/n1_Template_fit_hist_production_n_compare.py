@@ -100,6 +100,10 @@ class HistProduction:
                         temp_list=[minval,maxval]
                         temp_BinMinMax_list.append(temp_list)
                     else:
+                        if(hName=="lep1pt"): #ADDED  ##FIXME 
+                            temp_BinMinMax_list[kk][0] = 0; temp_BinMinMax_list[kk][1] = 400; continue #ADDED  ##FIXME
+                        if(hName=="jet1pt"): #ADDED  ##FIXME 
+                            temp_BinMinMax_list[kk][0] = 0; temp_BinMinMax_list[kk][1] = 600; continue #ADDED  ##FIXME
                         if(eval(BranchName)<temp_BinMinMax_list[kk][0]):  temp_BinMinMax_list[kk][0] = eval(BranchName)
                         if(eval(BranchName)>temp_BinMinMax_list[kk][1]):  temp_BinMinMax_list[kk][1] = eval(BranchName)
             print("Temp Bin Range of histograms :", temp_BinMinMax_list)
@@ -413,11 +417,11 @@ class HistoCompare_ttZ:
 
 def main():
     
-    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_TTTL.root")
+    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_TTTL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root")
 #    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoDATA_DECAY.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_LL.root")
     #histoName = ["Mjj","lep1pt","lep2pt","jet1pt","jet2pt","dphijj","MET","dr_ll_jj","zeppen_lep1","zeppen_lep2","RpT"] #"lep1pt"  
-    histoName = ["MET","METphi","Mjj","Mll","RpT","detajj","dphijj","dr_ll_jj","jet1eta","jet1phi","jet1pt","jet2eta","jet2phi","jet2pt","lep1eta","lep1phi","lep1pt","lep2eta","lep2phi","lep2pt","zeppen_lep1","zeppen_lep2"] #FIXME TODO
-    
+    #histoName = ["MET","METphi","Mjj","Mll","RpT","detajj","dphijj","dr_ll_jj","jet1eta","jet1phi","jet1pt","jet2eta","jet2phi","jet2pt","lep1eta","lep1phi","lep1pt","lep2eta","lep2phi","lep2pt","zeppen_lep1","zeppen_lep2"] #FIXME TODO
+    histoName = ["lep1pt","detajj","dphijj","Mjj","jet1pt"] 
  
     '''
     Infile_list =("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_TTTL.root")
@@ -443,7 +447,7 @@ def main():
 
 
     HistP = HistProduction(Infile_list)
-    Hist_files = HistP.MakeHistoROOT(binNum=5,histoName=histoName)  # FIXME Turn this on if histo production required.
+    Hist_files = HistP.MakeHistoROOT(binNum=200,histoName=histoName)  # FIXME Turn this on if histo production required.
     print(Hist_files)
 
     HistoCom = HistoCompare(Hist_files)
