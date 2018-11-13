@@ -24,7 +24,7 @@ void n1_RooFit()
 */
     //TFile *all = new TFile("lep1pt.root","READ");
     TFile *all = new TFile("Asimov_Dataset_20bins.root","READ"); //FIXME
-    Int_t bins = 20;  bins=bins;
+    Int_t bins = 20;  //FIXME TODO 
 //    TString HistoName = "dphijj";  //FIXME 
     TString HistoName = "lep1pt";  //FIXME 
 //    TString HistoName = "detajj";  //FIXME 
@@ -43,7 +43,8 @@ void n1_RooFit()
 
 //    RooRealVar x("x",HistoName,-0.5,3.5);  // FIXME The range: for dphijj
     RooRealVar x("x",HistoName,0,800);  // FIXME The range: for lep1pt
-    RooDataHist datahist_data("mc0_data","mc0_data",x, data);
+//    RooRealVar x("x",HistoName,0,600);  // FIXME The range: for jet1pt
+    RooDataHist datahist_data("datahist_data","datahist_data",x, data);
     RooDataHist datahist_mc0("mc0_data","mc0_data",x, mc0);
     RooDataHist datahist_mc1("mc1_data","mc1_data",x, mc1);
     //RooHistPdf pdf_data("pdf_data","pdf_data",x,datahist_data,2);
@@ -79,6 +80,17 @@ void n1_RooFit()
     TCanvas* c = new TCanvas("test_histpdf","test_histpdf",800,400) ; 
     //c->SetLogy(); //FIXME
     frame->Draw();
+    frame->Print();
+
+    Double_t Chi2_ndf = frame->chiSquare("model_Norm[x]_Comp[pdf_mc1]","h_datahist_data");  // For Bkg only
+//    Double_t Chi2_ndf = frame->chiSquare("model_Norm[x]_Comp[pdf_mc0,pdf_mc1]","h_datahist_data"); //For Bkg+Signal 
+    cout<<"Chi2/ndf = "<<Chi2_ndf<<endl;
+    cout<<"Chi2 = "<<Chi2_ndf*(bins-2)<<endl;
+    Double_t p_value=TMath::Prob(Chi2_ndf*(bins-2), bins-2); //https://root.cern.ch/root/html/src/TMath.cxx.html
+    cout<<"P_value = "<<p_value<<endl;
+    Double_t significance=RooStats::PValueToSignificance(p_value/2.0);  //FIXME
+    cout<<"Significance = "<<significance<<endl;
+
     TLegend *leg = new TLegend(0.7,0.7,0.9,0.9); TPaveText *pt = new TPaveText(0.7,0.5,0.9,0.7,"NDC"); // right  //FIXME 
 //    TLegend *leg = new TLegend(0.1,0.7,0.4,0.9); TPaveText *pt = new TPaveText(0.1,0.5,0.4,0.7,"NDC"); // left
     TLegendEntry* lmc0 = leg->AddEntry(&pdf_mc0,"LL","2 l");

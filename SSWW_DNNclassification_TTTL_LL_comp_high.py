@@ -9,24 +9,24 @@ from root_numpy import testdata
 from sklearn.model_selection import train_test_split
 from Epoch_loss_plots import Plotting
 
-model = DNN(n_in=13, n_hiddens=[200], n_out=2) #TODO FIXME
+model = DNN(n_in=13, n_hiddens=[500,500,500], n_out=2) #TODO FIXME
 #epochs = 100
-epochs = 5
+epochs = 100
 earlyStop =  20#20       #TODO FIXME
 batch_size = 100        #TODO FIXME
-Date=20181009          #TODO FIXME
-Layer_NUM= 1            #TODO FIXME
-Node_on_Each_layer=200   #TODO FIXME
+Date=20181112          #TODO FIXME
+Layer_NUM= 3            #TODO FIXME
+Node_on_Each_layer=500   #TODO FIXME
 #N_train = 680000         #TODO FIXME
 #N_train = 2000000
-N_train = 950000
+N_train = 1800000
 Model_name = "High_"+str(Date)+"_"+"TrainENum"+str(N_train)+"/"+"LayerNum_"+str(Layer_NUM)+"+"+"Node_"+str(Node_on_Each_layer)+"+"+"BatchSize_"+str(batch_size)
 Make_dir = "mkdir -p "+ "tens_model_class/"+Model_name
 os.system(Make_dir)
 model_name = Model_name +"/"+ "SSWW_tensor_TTTL-LL_comp"
 
 #data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_250M_comparable_3.root')
-data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_2p5M_comparable_2.root') #FIXME
+data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_DNN/TTTL_LL_4p0M_comparable_1.root') #FIXME
 #data = TFile.Open('/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/TEST_Multiplied_LLs/Multiplied_LLs.root')
 tree = data.Get('tree')
 

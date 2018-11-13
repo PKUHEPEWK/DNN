@@ -25,9 +25,9 @@ void n1_RooFit_forDNN()
 
 
     RooRealVar x("x",HistoName,0,1);  
-    RooDataHist datahist_data("mc0_data","mc0_data",x, data);
-    RooDataHist datahist_mc0("mc0_data","mc0_data",x, mc0);
-    RooDataHist datahist_mc1("mc1_data","mc1_data",x, mc1);
+    RooDataHist datahist_data("datahist_data","datahist_data",x, data);
+    RooDataHist datahist_mc0("datahist_mc0","datahist_mc0",x, mc0);
+    RooDataHist datahist_mc1("datahist_mc1","datahist_mc1",x, mc1);
     //RooHistPdf pdf_data("pdf_data","pdf_data",x,datahist_data,2);
     RooHistPdf pdf_mc0("pdf_mc0","pdf_mc0",x,datahist_mc0,2);
     //RooHistPdf *pdf_mc0 = new RooHistPdf("pdf_mc0","pdf_mc0",x,datahist_mc0,2);
@@ -44,8 +44,9 @@ void n1_RooFit_forDNN()
     RooArgSet mc1_component(pdf_mc1);
     //RooFitResult* r = model.fitTo(datahist_data,PrintLevel(-1));
     RooFitResult* r = model.fitTo(datahist_data,Save());
-    r->Print() ;
-    //r->plotOn(frame,pdf_mc0,fmc0,"ME12ABHV");
+    //r->Print() ;
+   
+     //r->plotOn(frame,pdf_mc0,fmc0,"ME12ABHV");
     //cout<<"!@#!@#!@#!@#SDFSDFS:"<<r[0]<<endl; 
 
     Double_t LL_fraction = fmc0.getVal();
@@ -61,6 +62,18 @@ void n1_RooFit_forDNN()
     TCanvas* c = new TCanvas("test_histpdf","test_histpdf",800,400) ; 
     //c->SetLogy(); //FIXME
     frame->Draw();
+   
+    frame->Print(); 
+    Double_t Chi2_ndf = frame->chiSquare("model_Norm[x]_Comp[pdf_mc1]","h_datahist_data");  // For Bkg only
+//    Double_t Chi2_ndf = frame->chiSquare("model_Norm[x]_Comp[pdf_mc0,pdf_mc1]","h_datahist_data"); //For Bkg+Signal 
+    cout<<"Chi2/ndf = "<<Chi2_ndf<<endl;
+    cout<<"Chi2 = "<<Chi2_ndf*(bins-2)<<endl;
+    Double_t p_value=TMath::Prob(Chi2_ndf*(bins-2), bins-2); //https://root.cern.ch/root/html/src/TMath.cxx.html
+    cout<<"P_value = "<<p_value<<endl;
+    Double_t significance=RooStats::PValueToSignificance(p_value/2.0);  //FIXME
+    cout<<"Significance = "<<significance<<endl;
+
+
     TLegend *leg = new TLegend(0.7,0.7,0.9,0.9); TPaveText *pt = new TPaveText(0.7,0.5,0.9,0.7,"NDC"); // right  //FIXME 
 //    TLegend *leg = new TLegend(0.1,0.7,0.4,0.9); TPaveText *pt = new TPaveText(0.1,0.5,0.4,0.7,"NDC"); // left
     TLegendEntry* lmc0 = leg->AddEntry(&pdf_mc0,"LL","2 l");
@@ -81,5 +94,9 @@ void n1_RooFit_forDNN()
     TString pdfName = "SSWW_"+HistoName+"_Fit.pdf";
     c->SaveAs(pdfName);
 
-
+/*
+    TCanvas* can = new TCanvas("histpdf","histpdf",800,400) ;
+    RooHist *rh = frame->getHist("h_datahist_data");
+    can->SaveAs("rm.pdf");
+*/
 }

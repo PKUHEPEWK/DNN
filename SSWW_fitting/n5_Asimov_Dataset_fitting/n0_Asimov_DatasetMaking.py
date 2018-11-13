@@ -95,7 +95,7 @@ class Asimov_Dataset:
 def main():
     infileLL = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_LL.root" #FIXME
     infileTTTL = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_TTTL.root" #FIXME
-    BinNum = 30                           #FIXME
+    BinNum = 20                           #FIXME
     XSec = 0.17864 #pb                   #FIXME
     Lumi = 3000000  #pb-1 == 10^-3 *fb-1  #FIXME
     eff_sel = 0.015944                      #FIXME
