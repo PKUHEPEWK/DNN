@@ -416,17 +416,17 @@ class HistoCompare_ttZ:
 
 
 def main():
-    
+    '''
     Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/SS_2p5M_cut_TTTL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root")
 #    Infile_list = ("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/Ntuple_PseudoDATA_DECAY.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/forFitting_SS_120M_LL.root")
     #histoName = ["Mjj","lep1pt","lep2pt","jet1pt","jet2pt","dphijj","MET","dr_ll_jj","zeppen_lep1","zeppen_lep2","RpT"] #"lep1pt"  
     #histoName = ["MET","METphi","Mjj","Mll","RpT","detajj","dphijj","dr_ll_jj","jet1eta","jet1phi","jet1pt","jet2eta","jet2phi","jet2pt","lep1eta","lep1phi","lep1pt","lep2eta","lep2phi","lep2pt","zeppen_lep1","zeppen_lep2"] #FIXME TODO
     histoName = ["lep1pt","detajj","dphijj","Mjj","jet1pt"] 
- 
-    '''
-    Infile_list =("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_TTTL.root")
+    ''' 
+
+    #Infile_list =("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_250M_cut_TTTL.root")
+    Infile_list =("/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_4p0M_cut_LL.root","/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_LL_TTTL_compare/SS_4p0M_cut_TTTL.root")
     histoName = ["MET","METphi","Mjj","Mll","RpT","detajj","dphijj","dr_ll_jj","jet1eta","jet1phi","jet1pt","jet2eta","jet2phi","jet2pt","lep1eta","lep1phi","lep1pt","lep2eta","lep2phi","lep2pt","zeppen_lep1","zeppen_lep2"]
-    '''
 
 
     '''

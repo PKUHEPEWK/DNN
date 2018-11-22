@@ -8,23 +8,18 @@ from n1_Template_fit_hist_production_n_compare import HistProduction, HistoCompa
 #FileDir = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/High_20181026_TrainENum1500000/LayerNum_7+Node_300+BatchSize_10"
 #FileDir = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/High_20181010_TrainENum700000/LayerNum_1+Node_150+BatchSize_10"
 #FileDir = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/High_20181010_TrainENum700000/LayerNum_5+Node_150+BatchSize_10"
-FileDir = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/All_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10"
-FileDir = FileDir + "/TEST_TRAIN_ROOT"
+FileDir = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/Raw_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10"
+FileDir = FileDir + "/TEST_TRAIN_ROOT_Mjj1200"
+os.system("mkdir -p "+FileDir)
 
-LL_Train_TXT = "TRAIN_ROOT_LL.txt" #FIXME
-TTTL_Train_TXT = "TRAIN_ROOT_TTTL.txt"
-LL_Test_TXT = "TEST_ROOT_LL.txt"
-TTTL_Test_TXT = "TEST_ROOT_TTTL.txt"
-#PSeudoData_TXT = "PseudoDATA_3ab_MERGED.txt" #FIXME
+LL_Mjj = "SS_4p0M_cut_LL_Mjj1200.txt"
+TTTL_Mjj = "SS_4p0M_cut_TTTL_Mjj1200.txt"
 
-Raw_text_to_Tree_root(LL_Test_TXT)
-Raw_text_to_Tree_root(LL_Train_TXT)
-Raw_text_to_Tree_root(TTTL_Test_TXT)
-Raw_text_to_Tree_root(TTTL_Train_TXT)
-#Raw_text_to_Tree_root(PSeudoData_TXT)
+Raw_text_to_Tree_root(LL_Mjj)
+Raw_text_to_Tree_root(TTTL_Mjj)
 
+Infile_list = ("SS_4p0M_cut_TTTL_Mjj1200_tree.root","SS_4p0M_cut_LL_Mjj1200_tree.root")
 #Infile_list = ("TRAIN_ROOT_LL_tree.root","TEST_ROOT_LL_tree.root","TRAIN_ROOT_TTTL_tree.root","TEST_ROOT_TTTL_tree.root")
-Infile_list = ("TRAIN_ROOT_TTTL_tree.root","TEST_ROOT_TTTL_tree.root","TRAIN_ROOT_LL_tree.root","TEST_ROOT_LL_tree.root")
 #Infile_list = ("TRAIN_ROOT_TTTL_tree.root","TEST_ROOT_TTTL_tree.root","TRAIN_ROOT_LL_tree.root","TEST_ROOT_LL_tree.root","PseudoDATA_3ab_MERGED_tree.root") #FIXME
 histoName = ["LL","TTTL"]
 HistP = HistProduction(Infile_list)

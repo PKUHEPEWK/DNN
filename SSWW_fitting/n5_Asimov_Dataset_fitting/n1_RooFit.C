@@ -40,6 +40,10 @@ void n1_RooFit()
     mc0 = (TH1D*)all->Get(histLL);
     mc1 = (TH1D*)all->Get(histTTTL);
 
+    //Double_t LL_scale = 384.768/mc0->Integral();
+    //Double_t TTTL_scale = 8159.94/mc1->Integral();
+    //mc0->Scale(LL_scale);
+    //mc1->Scale(TTTL_scale);
 
 //    RooRealVar x("x",HistoName,-0.5,3.5);  // FIXME The range: for dphijj
     RooRealVar x("x",HistoName,0,800);  // FIXME The range: for lep1pt

@@ -35,15 +35,15 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     MET_         = tree2array(tree, branches='MET')
     #lep1PID_     = tree2array(tree, branches='lep1PID')
     #lep2PID_     = tree2array(tree, branches='lep2PID')
-    #Mjj_         = tree2array(tree, branches='Mjj')
-    #dr_ll_jj_    = tree2array(tree, branches='dr_ll_jj')
-    #dphijj_      = tree2array(tree, branches='dphijj')
+    Mjj_         = tree2array(tree, branches='Mjj')
+    dr_ll_jj_    = tree2array(tree, branches='dr_ll_jj')
+    dphijj_      = tree2array(tree, branches='dphijj')
     #zeppen_lep1_ = tree2array(tree, branches='zeppen_lep1')
     #zeppen_lep2_ = tree2array(tree, branches='zeppen_lep2')
     METphi_      = tree2array(tree, branches='METphi')
-    #detajj_      = tree2array(tree, branches='detajj')
-    #Mll_         = tree2array(tree, branches='Mll')
-    #RpT_         = tree2array(tree, branches='RpT')
+    detajj_      = tree2array(tree, branches='detajj')
+    Mll_         = tree2array(tree, branches='Mll')
+    RpT_         = tree2array(tree, branches='RpT')
     ###############################################################################################################
 
     ##################################### Target DATA !!!!!
@@ -73,15 +73,15 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     MET = np.zeros(ENTRY)
     #lep1PID = np.zeros(ENTRY)
     #lep2PID = np.zeros(ENTRY)
-    #Mjj = np.zeros(ENTRY)
-    #dr_ll_jj = np.zeros(ENTRY)
-    #dphijj = np.zeros(ENTRY)
+    Mjj = np.zeros(ENTRY)
+    dr_ll_jj = np.zeros(ENTRY)
+    dphijj = np.zeros(ENTRY)
     #zeppen_lep1 = np.zeros(ENTRY)
     #zeppen_lep2 = np.zeros(ENTRY)
     METphi = np.zeros(ENTRY)
-    #detajj = np.zeros(ENTRY)
-    #Mll = np.zeros(ENTRY)
-    #RpT = np.zeros(ENTRY)
+    detajj = np.zeros(ENTRY)
+    Mll = np.zeros(ENTRY)
+    RpT = np.zeros(ENTRY)
 
     LL_Helicity = np.zeros(ENTRY)
     TTTL_Helicity = np.zeros(ENTRY)
@@ -106,23 +106,22 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
         MET[j1] = MET_[j1]
         #lep1PID[j1] = lep1PID_[j1]
         #lep2PID[j1] = lep2PID_[j1]
-        #Mjj[j1] = Mjj_[j1]
-        #dr_ll_jj[j1] = dr_ll_jj_[j1]
-        #dphijj[j1] = dphijj_[j1]
+        Mjj[j1] = Mjj_[j1]
+        dr_ll_jj[j1] = dr_ll_jj_[j1]
+        dphijj[j1] = dphijj_[j1]
         #zeppen_lep1[j1] = zeppen_lep1_[j1]
         #zeppen_lep2[j1] = zeppen_lep2_[j1]
         METphi[j1] = METphi_[j1]
-        #detajj[j1] = detajj_[j1]
-        #Mll[j1] = Mll_[j1]
-        #RpT[j1] = RpT_[j1]
+        detajj[j1] = detajj_[j1]
+        Mll[j1] = Mll_[j1]
+        RpT[j1] = RpT_[j1]
         LL_Helicity[j1] = LL_Helicity_[j1]
         TTTL_Helicity[j1] = TTTL_Helicity_[j1]
         #TL_Helicity[j1] = TL_Helicity_[j1]
         #TT_Helicity[j1] = TT_Helicity_[j1]
 
-    #ARRAY = np.stack((lep1pt, lep1eta, lep1phi, lep2pt, lep2eta, lep2phi, jet1pt, jet1eta, jet1phi, jet1M, jet2pt, jet2eta, jet2phi, jet2M, MET, lep1PID, lep2PID, Mjj, dr_ll_jj, dphijj, zeppen_lep1, zeppen_lep2, METphi, detajj, Mll, RpT))
+    ARRAY = np.stack((lep1pt, lep1eta, lep1phi, lep2pt, lep2eta, lep2phi, jet1pt, jet1eta, jet1phi, jet1M, jet2pt, jet2eta, jet2phi, jet2M, MET, Mjj, dr_ll_jj, dphijj, METphi, detajj, Mll, RpT))
     #ARRAY = np.stack((lep1pt, lep1eta, lep2pt, lep2eta, jet1pt, jet1eta, jet2pt, jet2eta, MET, dr_ll_jj, dphijj, detajj, Mll))
-    ARRAY = np.stack((lep1pt, lep1eta, lep1phi, lep2pt, lep2eta, lep2phi, jet1pt, jet1eta, jet1phi, jet1M, jet2pt, jet2eta, jet2phi, jet2M, MET, METphi))
     TARGET = np.stack((LL_Helicity, TTTL_Helicity))
     #TARGET = np.stack((LL_Helicity, TL_Helicity, TT_Helicity))
 
@@ -135,7 +134,7 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     #N_validation = ARRAY.shape[0]-(N_train)
     print(X_part.shape,"x_train"); print(Y_part.shape)
     #model = DNN(n_in=26, n_hiddens=[150], n_out=2)  ##FIXME TODO
-    model = DNN(n_in=16, n_hiddens=[150,150,150,150,150,150,150,150,150,150], n_out=2)  ##FIXME TODO
+    model = DNN(n_in=22, n_hiddens=[150,150,150,150,150,150,150,150,150,150], n_out=2)  ##FIXME TODO
     print("Error test1")
     model.fit_classify_model_read(ModelName=ModelName)
     print("Error test2")
@@ -190,14 +189,14 @@ def InputROOT_OutputTXT(infileROOT,ModelName):
     '''
 
 def main():
-    #infileROOT = "/sps/cms/jlee/DNN/tens_model_class/Raw_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TEST_ROOT_LL.root"
-    #infileROOT = "/sps/cms/jlee/DNN/tens_model_class/Raw_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TEST_ROOT_TTTL.root"
-    #infileROOT = "/sps/cms/jlee/DNN/tens_model_class/Raw_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TRAIN_ROOT_LL.root"
-    infileROOT = "/sps/cms/jlee/DNN/tens_model_class/Raw_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL.root"
+    #infileROOT = "/sps/cms/jlee/DNN/tens_model_class/High_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TEST_ROOT_LL.root"
+    #infileROOT = "/sps/cms/jlee/DNN/tens_model_class/High_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TEST_ROOT_TTTL.root"
+    infileROOT = "/sps/cms/jlee/DNN/tens_model_class/High_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TRAIN_ROOT_LL.root"
+    #infileROOT = "/sps/cms/jlee/DNN/tens_model_class/High_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT/TRAIN_ROOT_TTTL.root"
 
     #infileROOT = "/pbs/home/j/jlee/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab_MERGED.root"
 
-    ModelName = "/sps/cms/jlee/DNN/tens_model_class/Raw_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/SSWW_tensor_TTTL-LL_comp_EP172.ckpt" #FIXME
+    ModelName = "/sps/cms/jlee/DNN/tens_model_class/High_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/SSWW_tensor_TTTL-LL_comp_EP112.ckpt" #FIXME
 
     InputROOT_OutputTXT(infileROOT=infileROOT, ModelName=ModelName)
 

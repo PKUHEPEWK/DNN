@@ -4,8 +4,8 @@ import numpy as np
 from array import array
 
 def ROC_List_Maker(dirname='./',dirnameNN='./', verbose=0):
-    LL_filename = dirname+"/TEST_ROOT_LL_tree_hist.root"
-    TTTL_filename = dirname +"/TEST_ROOT_TTTL_tree_hist.root" 
+    LL_filename = dirname+"/SS_4p0M_cut_LL_Mjj1200_tree_hist.root"
+    TTTL_filename = dirname +"/SS_4p0M_cut_TTTL_Mjj1200_tree_hist.root" 
     LL_TFile = TFile(LL_filename,"READ") 
     TTTL_TFile = TFile(TTTL_filename,"READ")   
     LL_LL_Hist = LL_TFile.Get("LL")
@@ -287,7 +287,7 @@ def ROC_plotter(Roc_list,dirname,verbose=0):
 
 
 def main():
-    dirname = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/All_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT" #FIXME
+    dirname = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/Raw_20181115_TrainENum2600000/LayerNum_10+Node_150+BatchSize_10/TEST_TRAIN_ROOT_Mjj1200" #FIXME
     dirnameNN = "/Users/leejunho/Desktop/git/PKUHEP/DNN/tens_model_class/From_ipnl/High_20181010_TrainENum700000/LayerNum_1+Node_150+BatchSize_10/TEST_TRAIN_ROOT" #FIXME
     verbose = 1  #FIXME
 

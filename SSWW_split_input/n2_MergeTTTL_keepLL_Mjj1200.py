@@ -66,6 +66,7 @@ class New_tree(object):
         for i in range(Entry):
             if i%10000==0: print("Now looping", i," of Total",Entry); #print LL_Helicity
             tree.GetEntry(i)
+            if(eval("tree.Mjj")<1200): continue
             if(LL_Helicity[0] == 0.0): TTTL_Helicity[0] = 1.0
             tree_w.Fill()
         tree_w.Write()
@@ -74,11 +75,10 @@ class New_tree(object):
 
 
 def main():
-    infile = "SS_4p0M_cut_LL_Mjj1200.root"
-#    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_2p5M.root"
+    infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_input/SS_2p5M.root"
     #infile = "/Users/leejunho/Desktop/git/PKUHEP/DNN/SSWW_split_input/result/for_fitting/PseudoDATA/PseudoDATA_3ab.root"
     Test = New_tree(infile)
-    Test.Generate(tag="TTTL_LL")
+    Test.Generate(tag="TTTL_LL_Mjj1200")
 
 if __name__=="__main__":
     main()
