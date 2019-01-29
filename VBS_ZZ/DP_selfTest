@@ -1,0 +1,21 @@
+#!/bin/bash
+#bsub -q 1nw RunBatchDelphes_test_
+#bjobs
+#bkill
+#export LSB_JOB_REPORT_MAIL=N
+export LOCALDIR=`pwd`
+export EXECDIR=/afs/cern.ch/user/j/junho/work/MyAnalysis_IPHC2/CMSSW_8_0_23/src/MG5_aMC_v2_5_5/Delphes
+#export EXECDIR=/home/junho/MG5_aMC_v2_6_1/Delphes
+
+export LC_ALL=en_US.UTF-8
+export PYTHIA8DATA=/afs/cern.ch/user/j/junho/work/MyAnalysis_IPHC2/CMSSW_8_0_23/src/MG5_aMC_v2_5_5/HEPTools/pythia8/share/Pythia8/xmldoc
+export PATH=/afs/cern.ch/user/j/junho/work/MyAnalysis_IPHC2/CMSSW_8_0_23/src/MG5_aMC_v2_5_5/HEPTools/MG5aMC_PY8_interface/:/afs/cern.ch/user/j/junho/work/MyAnalysis_IPHC2/CMSSW_8_0_23/src/MG5_aMC_v2_5_5/HEPTools/pythia8/:$PATH
+LD_LIBRARY_PATH=/afs/cern.ch/user/j/junho/work/MyAnalysis_IPHC2/CMSSW_8_0_23/src/MG5_aMC_v2_5_5/Delphes/:$LD_LIBRARY_PATH
+#export PYTHIA8DATA=/home/junho/MG5_aMC_v2_6_1/HEPTools/pythia8/share/Pythia8/xmldoc
+#export PATH=/home/junho/MG5_aMC_v2_6_1/HEPTools/MG5aMC_PY8_interface/:/home/junho/MG5_aMC_v2_6_1/HEPTools/pythia8/:$PATH
+#LD_LIBRARY_PATH=/home/junho/MG5_aMC_v2_6_1/Delphes/:$LD_LIBRARY_PATH
+
+cd ${EXECDIR}
+
+ls 
+
